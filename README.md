@@ -3,8 +3,8 @@ This project was built with [Jekyll](https://jekyllrb.com/)!
 ## Usage
 1. Clone repository
 ```
-$ git clone https://github.com/OldGuo/oldguo.github.io.git
-$ cd oldguo.github.io
+$ git clone https://github.com/youngxguo/youngxguo.github.io.git
+$ cd youngxguo.github.io
 ```
 
 2. [Install Jekyll](https://jekyllrb.com/docs/installation/)

@@ -16,7 +16,7 @@ resume: false
 resume-external: false
 resume-url: assets/resume.pdf
 
-url: https://oldguo.github.io
+url: https://youngxguo.github.io
 # your url: http://USERNAME.github.io
 
 permalink: /:title/
@@ -42,7 +42,7 @@ disqus:
 linkedin: youngguo
 # youtube: myyoutube
 # spotify: myspotify
-github: oldguo
+github: youngxguo
 # lastfm: mylastfm
 # stackoverflow: 7044681/mystackoverflow
 # quora: userquora
