@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+msg_file="${1:-}"
+if [[ -z "$msg_file" || ! -f "$msg_file" ]]; then
+  exit 0
+fi
+
+mapfile -t raw_lines <"$msg_file"
+lines=()
+for line in "${raw_lines[@]}"; do
+  if [[ "$line" =~ ^# ]]; then
+    continue
+  fi
+  lines+=("$line")
+done
+
+subject=""
+body_lines=()
+subject_found=0
+for line in "${lines[@]}"; do
+  if [[ $subject_found -eq 0 ]]; then
+    if [[ -z "${line//[[:space:]]/}" ]]; then
+      continue
+    fi
+    subject="$line"
+    subject_found=1
+    continue
+  fi
+  body_lines+=("$line")
+done
+
+if [[ -z "$subject" ]]; then
+  echo "error: empty commit subject." >&2
+  exit 1
+fi
+
+# Keep standard git-generated commit subjects unblocked.
+if [[ "$subject" =~ ^(Merge|Revert|fixup\!|squash\!) ]]; then
+  exit 0
+fi
+
+if (( ${#subject} > 72 )); then
+  echo "error: commit subject is too long (${#subject} > 72)." >&2
+  exit 1
+fi
+
+if [[ "$subject" != *"("*"):"* ]]; then
+  cat >&2 <<'EOF'
+error: invalid commit subject format.
+expected: <emoji> <type>(<scope>): <summary>
+example: ✨ feat(home): add yxgui-powered hero section
+EOF
+  exit 1
+fi
+
+prefix="${subject%%(*}"
+scope_and_summary="${subject#*(}"
+scope="${scope_and_summary%%)*}"
+after_scope="${subject#*)}"
+summary="${after_scope#: }"
+
+case "$prefix" in
+  "✨ feat" | "🐛 fix" | "🧹 chore" | "♻️ refactor" | "📝 docs" | "✅ test" | "🎨 style" | "⚡ perf" | "♿ a11y" | "👷 ci" | "🔧 build")
+    ;;
+  *)
+    cat >&2 <<'EOF'
+error: invalid commit subject format.
+expected: <emoji> <type>(<scope>): <summary>
+example: ✨ feat(home): add yxgui-powered hero section
+EOF
+    exit 1
+    ;;
+esac
+
+if ! [[ "$scope" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+  echo "error: invalid scope. use lowercase letters, numbers, and dashes." >&2
+  exit 1
+fi
+
+if [[ "$after_scope" != ": "* ]] || [[ -z "$summary" ]]; then
+  echo "error: summary is required after \"): \"." >&2
+  exit 1
+fi
+
+nonempty_body=()
+for line in "${body_lines[@]}"; do
+  if [[ -z "${line//[[:space:]]/}" ]]; then
+    continue
+  fi
+  nonempty_body+=("$line")
+done
+
+if (( ${#nonempty_body[@]} == 0 )); then
+  echo "error: commit body is required (1-3 short lines)." >&2
+  exit 1
+fi
+
+if (( ${#nonempty_body[@]} > 3 )); then
+  echo "error: commit body is too long (${#nonempty_body[@]} lines > 3)." >&2
+  exit 1
+fi
+
+for line in "${nonempty_body[@]}"; do
+  if [[ "$line" == *'\\n'* ]]; then
+    echo "error: commit body contains literal \\\\n; use multiple -m flags instead." >&2
+    exit 1
+  fi
+  if (( ${#line} > 100 )); then
+    echo "error: commit body line is too long (${#line} > 100)." >&2
+    exit 1
+  fi
+done
