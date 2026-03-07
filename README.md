@@ -1,17 +1,30 @@
-This project was built with [Jekyll](https://jekyllrb.com/)!
+# youngxguo.github.io
 
-## Usage
-1. Clone repository
-```
-$ git clone https://github.com/youngxguo/youngxguo.github.io.git
-$ cd youngxguo.github.io
+Personal site rebuilt from Jekyll to **Vite + React + TypeScript**.
+
+## Stack
+
+- Vite 7
+- React 19
+- TypeScript
+- ESLint 9 (flat config)
+- Prettier
+- Vitest + Testing Library
+
+## Development
+
+```bash
+pnpm install
+pnpm dev
 ```
 
-2. [Install Jekyll](https://jekyllrb.com/docs/installation/)
+## Quality checks
 
-3. Build and run
-```
-$ bundle exec jekyll serve -w
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
 ```
 
-4. Visit page at localhost:4000
+Build output is generated in `dist/`, and `dist/404.html` is copied from `index.html` to support GitHub Pages SPA routing.
