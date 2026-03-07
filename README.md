@@ -1,6 +1,6 @@
 # youngxguo.github.io
 
-Personal site rebuilt from Jekyll to **Vite + React + TypeScript**.
+Simple personal site built with **Vite + React + TypeScript**.
 
 ## Stack
 

@@ -1,25 +1,14 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import App from './App';
+import { siteConfig } from './siteConfig';
 
 describe('App', () => {
-  it('renders home title', () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <App />
-      </MemoryRouter>
-    );
+  it('renders profile heading and action buttons', () => {
+    render(<App />);
 
-    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
-  });
-
-  it('renders about page content', () => {
-    render(
-      <MemoryRouter initialEntries={['/about']}>
-        <App />
-      </MemoryRouter>
-    );
-
-    expect(screen.getByRole('heading', { name: 'About Me' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: siteConfig.name })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'GitHub' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'LinkedIn' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Email' })).toBeInTheDocument();
   });
 });

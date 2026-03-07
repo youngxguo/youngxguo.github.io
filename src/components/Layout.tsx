@@ -1,44 +1,45 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import {
+  Avatar,
+  Button,
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Typography
+} from 'yxgui';
 import { siteConfig } from '../siteConfig';
 
-const navClassName = ({ isActive }: { isActive: boolean }) =>
-  isActive ? 'nav-link nav-link-active' : 'nav-link';
+function openExternal(url: string) {
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+function openMailto(url: string) {
+  window.location.href = url;
+}
 
 export function Layout() {
   return (
-    <div className="site-shell">
-      <header className="hero">
-        <img className="avatar" src={siteConfig.picture} alt={siteConfig.name} />
-        <p className="eyebrow">Personal Site</p>
-        <h1>{siteConfig.name}</h1>
-        <p className="bio">{siteConfig.bio}</p>
-        <div className="social-row" aria-label="social links">
-          <a href={siteConfig.links.github} target="_blank" rel="noreferrer">
+    <main>
+      <Card>
+        <CardHeader>
+          <Avatar src={siteConfig.picture} alt={siteConfig.name} size="lg" shape="circle" />
+          <CardTitle>{siteConfig.name}</CardTitle>
+          <CardDescription>{siteConfig.bio}</CardDescription>
+        </CardHeader>
+        <CardFooter>
+          <Button variant="secondary" onClick={() => openExternal(siteConfig.links.github)}>
             GitHub
-          </a>
-          <a href={siteConfig.links.linkedin} target="_blank" rel="noreferrer">
+          </Button>
+          <Button variant="secondary" onClick={() => openExternal(siteConfig.links.linkedin)}>
             LinkedIn
-          </a>
-          <a href={siteConfig.links.email}>Email</a>
-        </div>
-      </header>
-
-      <nav className="top-nav" aria-label="Main navigation">
-        <NavLink className={navClassName} to="/" end>
-          Home
-        </NavLink>
-        <NavLink className={navClassName} to="/about">
-          About
-        </NavLink>
-      </nav>
-
-      <main className="page-body">
-        <Outlet />
-      </main>
-
-      <footer className="footer">
+          </Button>
+          <Button onClick={() => openMailto(siteConfig.links.email)}>Email</Button>
+        </CardFooter>
+      </Card>
+      <Typography as="p" variant="small">
         {siteConfig.name} © {new Date().getFullYear()}
-      </footer>
-    </div>
+      </Typography>
+    </main>
   );
 }
