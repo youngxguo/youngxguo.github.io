@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
   Flex,
+  Textarea,
   Typography
 } from 'yxgui';
 import { ComponentDoc } from './docsData';
@@ -40,19 +41,30 @@ export function ComponentDocTemplate({
           <CardDescription>Tweak the controls and verify behavior in context.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Flex direction="row" align="start" wrap="wrap" gap="lg">
-            <Flex direction="column" gap="md" style={{ flex: '0 0 16rem', minWidth: '15rem' }}>
-              {controls}
-            </Flex>
-            <Flex direction="column" gap="sm" style={{ flex: '1 1 22rem', minWidth: '18rem' }}>
-              {preview}
-            </Flex>
+          <Flex direction="row" align="start" wrap="wrap" gap="md">
+            <Card>
+              <CardHeader>
+                <CardTitle>Controls</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Flex direction="column" gap="md">
+                  {controls}
+                </Flex>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Preview</CardTitle>
+              </CardHeader>
+              <CardContent>{preview}</CardContent>
+            </Card>
           </Flex>
         </CardContent>
       </Card>
 
-      <Flex direction="row" gap="md" wrap="wrap" align="stretch">
-        <Card style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+      <Flex direction="column" gap="md">
+        <Card>
           <CardHeader>
             <CardTitle>When to use</CardTitle>
           </CardHeader>
@@ -67,7 +79,7 @@ export function ComponentDocTemplate({
           </CardContent>
         </Card>
 
-        <Card style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+        <Card>
           <CardHeader>
             <CardTitle>When not to use</CardTitle>
           </CardHeader>
@@ -82,7 +94,7 @@ export function ComponentDocTemplate({
           </CardContent>
         </Card>
 
-        <Card style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+        <Card>
           <CardHeader>
             <CardTitle>Accessibility notes</CardTitle>
           </CardHeader>
@@ -132,24 +144,12 @@ export function ComponentDocTemplate({
           <CardTitle>Example</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre
-            style={{
-              margin: 0,
-              padding: '0.875rem 1rem',
-              borderRadius: '0.75rem',
-              overflowX: 'auto',
-              border: '1px solid rgba(15, 23, 42, 0.12)',
-              background: 'rgba(15, 23, 42, 0.04)',
-              color: '#0f172a',
-              fontFamily:
-                'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace',
-              fontSize: '0.875rem',
-              lineHeight: 1.55,
-              whiteSpace: 'pre'
-            }}
-          >
-            <code>{codeSample}</code>
-          </pre>
+          <Textarea
+            aria-label={`${doc.name} example`}
+            readOnly
+            value={codeSample}
+            rows={Math.max(6, codeSample.split('\n').length + 1)}
+          />
         </CardContent>
       </Card>
     </Flex>

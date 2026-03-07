@@ -17,11 +17,7 @@ interface NotFoundPageProps {
 export function NotFoundPage({ onNavigate }: NotFoundPageProps) {
   return (
     <section aria-label="not found page">
-      <Flex
-        direction="column"
-        gap="lg"
-        style={{ maxWidth: '56rem', margin: '0 auto', padding: '1.5rem 1rem 2rem' }}
-      >
+      <Flex direction="column" gap="lg">
         <Card>
           <CardHeader>
             <CardTitle>Page not found</CardTitle>

@@ -21,15 +21,11 @@ interface DocsShellProps {
 export function DocsShell({ activeComponentId, onNavigate, children }: DocsShellProps) {
   return (
     <section aria-label="yxgui docs">
-      <Flex
-        direction="column"
-        gap="lg"
-        style={{ maxWidth: '72rem', margin: '0 auto', padding: '1.5rem 1rem 2rem' }}
-      >
+      <Flex direction="column" gap="lg">
         <Card>
           <CardHeader>
             <Flex direction="row" align="center" justify="between" wrap="wrap" gap="sm">
-              <Flex direction="column" gap="xs" style={{ flex: '1 1 22rem' }}>
+              <Flex direction="column" gap="xs">
                 <Badge variant="success">yxgui</Badge>
                 <CardTitle>Component docs</CardTitle>
                 <CardDescription>Public docs + live playgrounds for the library.</CardDescription>
@@ -47,15 +43,14 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
         </Card>
 
         <Flex direction="row" gap="lg" align="start" wrap="wrap">
-          <Card style={{ flex: '0 0 16rem', minWidth: '15rem' }}>
+          <Card>
             <CardHeader>
               <CardTitle>Navigation</CardTitle>
               <CardDescription>Jump between component docs.</CardDescription>
             </CardHeader>
             <CardFooter>
-              <Flex direction="column" gap="xs" style={{ width: '100%' }}>
+              <Flex direction="column" gap="xs" align="stretch">
                 <Button
-                  style={{ width: '100%' }}
                   variant={!activeComponentId ? 'primary' : 'secondary'}
                   onClick={() => onNavigate('/docs')}
                 >
@@ -64,7 +59,6 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
                 {docsComponents.map((component) => (
                   <Button
                     key={component.id}
-                    style={{ width: '100%' }}
                     variant={activeComponentId === component.id ? 'primary' : 'ghost'}
                     onClick={() => onNavigate(`/docs/components/${component.id}`)}
                   >
@@ -75,7 +69,7 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
             </CardFooter>
           </Card>
 
-          <Flex direction="column" gap="lg" style={{ flex: '1 1 34rem', minWidth: '18rem' }}>
+          <Flex direction="column" gap="lg">
             {children}
           </Flex>
         </Flex>

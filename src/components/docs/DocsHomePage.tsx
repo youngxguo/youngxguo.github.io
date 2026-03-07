@@ -67,9 +67,9 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         </CardContent>
       </Card>
 
-      <Flex direction="row" gap="md" wrap="wrap" align="stretch">
+      <Flex direction="column" gap="md">
         {docsComponents.map((component) => (
-          <Card key={component.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+          <Card key={component.id}>
             <CardHeader>
               <Badge variant="neutral">{component.status}</Badge>
               <CardTitle>{component.name}</CardTitle>

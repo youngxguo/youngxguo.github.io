@@ -28,16 +28,12 @@ function openMailto(url: string) {
 export function HomePage({ onNavigate }: HomePageProps) {
   return (
     <section aria-label="home page">
-      <Flex
-        direction="column"
-        gap="lg"
-        style={{ maxWidth: '56rem', margin: '0 auto', padding: '1.5rem 1rem 2rem' }}
-      >
+      <Flex direction="column" gap="lg">
         <Card>
           <CardHeader>
             <Flex direction="row" align="center" gap="md" wrap="wrap">
               <Avatar src={siteConfig.picture} alt={siteConfig.name} size="lg" shape="circle" />
-              <Flex direction="column" gap="xs" style={{ flex: '1 1 18rem' }}>
+              <Flex direction="column" gap="xs">
                 <Flex direction="row" gap="xs" wrap="wrap">
                   <Badge variant="outline">Engineering</Badge>
                   <Badge variant="neutral">yxgui maintainer</Badge>
