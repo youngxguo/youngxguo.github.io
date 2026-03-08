@@ -53,7 +53,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         </CardHeader>
         <CardContent>
           <Flex direction="row" gap="md" wrap="wrap" align="stretch">
-            <Flex style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+            <Flex flex="1 1 12rem">
               <Card variant="elevated">
                 <CardHeader>
                   <CardTitle>{docsComponents.length}</CardTitle>
@@ -61,7 +61,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
                 </CardHeader>
               </Card>
             </Flex>
-            <Flex style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+            <Flex flex="1 1 12rem">
               <Card variant="elevated">
                 <CardHeader>
                   <CardTitle>{docsContext.exportedFamiliesCount}</CardTitle>
@@ -69,7 +69,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
                 </CardHeader>
               </Card>
             </Flex>
-            <Flex style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+            <Flex flex="1 1 12rem">
               <Card variant="elevated">
                 <CardHeader>
                   <CardTitle>{coveragePercent}%</CardTitle>
@@ -125,7 +125,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         <CardContent>
           <Flex direction="row" gap="md" wrap="wrap" align="stretch">
             {docsConventions.map((convention) => (
-              <Flex key={convention.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+              <Flex key={convention.id} flex="1 1 16rem">
                 <Card variant="elevated">
                   <CardHeader>
                     <CardTitle>{convention.title}</CardTitle>
@@ -153,7 +153,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         <CardContent>
           <Flex direction="row" gap="md" wrap="wrap" align="stretch">
             {docsCatalogGroups.map((group) => (
-              <Flex key={group.title} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+              <Flex key={group.title} flex="1 1 16rem">
                 <Card variant="elevated">
                   <CardHeader>
                     <CardTitle>{group.title}</CardTitle>
@@ -177,7 +177,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
 
       <Flex direction="row" gap="md" wrap="wrap" align="stretch">
         {docsComponents.map((component) => (
-          <Flex key={component.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+          <Flex key={component.id} flex="1 1 16rem">
             <Card variant="elevated">
               <CardHeader>
                 <Badge variant="neutral">{component.status}</Badge>

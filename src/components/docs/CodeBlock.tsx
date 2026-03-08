@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import type { HighlighterCore } from 'shiki/core';
-import './CodeBlock.css';
 
 type CodeLanguage = 'tsx';
 type CodeTheme = 'solarized-dark';
@@ -53,12 +52,7 @@ function escapeHtml(value: string): string {
 }
 
 function createFallbackHtml(code: string): string {
-  const lineHtml = code
-    .split('\n')
-    .map((line) => `<span class="line">${line.length > 0 ? escapeHtml(line) : '&nbsp;'}</span>`)
-    .join('');
-
-  return `<pre><code>${lineHtml}</code></pre>`;
+  return `<pre><code>${escapeHtml(code)}</code></pre>`;
 }
 
 export function CodeBlock({
@@ -100,5 +94,5 @@ export function CodeBlock({
     };
   }, [code, language, theme]);
 
-  return <div className="code-block" dangerouslySetInnerHTML={{ __html: highlightedHtml }} />;
+  return <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />;
 }

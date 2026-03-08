@@ -57,10 +57,10 @@ export function ComponentDocTemplate({
         </CardHeader>
         <CardContent>
           <Flex direction="row" align="start" wrap="wrap" gap="lg">
-            <Flex direction="column" gap="md" style={{ flex: '0 0 16rem', minWidth: '15rem' }}>
+            <Flex direction="column" gap="md" flex="0 0 16rem">
               {controls}
             </Flex>
-            <Flex direction="column" gap="sm" style={{ flex: '1 1 22rem', minWidth: '18rem' }}>
+            <Flex direction="column" gap="sm" flex="1 1 22rem">
               {preview}
             </Flex>
           </Flex>
@@ -68,7 +68,7 @@ export function ComponentDocTemplate({
       </Card>
 
       <Flex direction="row" gap="md" wrap="wrap" align="stretch">
-        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+        <Flex flex="1 1 16rem">
           <Card>
             <CardHeader>
               <CardTitle>When to use</CardTitle>
@@ -85,7 +85,7 @@ export function ComponentDocTemplate({
           </Card>
         </Flex>
 
-        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+        <Flex flex="1 1 16rem">
           <Card>
             <CardHeader>
               <CardTitle>When not to use</CardTitle>
@@ -102,7 +102,7 @@ export function ComponentDocTemplate({
           </Card>
         </Flex>
 
-        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+        <Flex flex="1 1 16rem">
           <Card>
             <CardHeader>
               <CardTitle>Accessibility notes</CardTitle>
@@ -121,7 +121,7 @@ export function ComponentDocTemplate({
       </Flex>
 
       <Flex direction="row" gap="md" wrap="wrap" align="stretch">
-        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+        <Flex flex="1 1 16rem">
           <Card>
             <CardHeader>
               <CardTitle>Composition patterns</CardTitle>
@@ -138,7 +138,7 @@ export function ComponentDocTemplate({
           </Card>
         </Flex>
 
-        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+        <Flex flex="1 1 16rem">
           <Card>
             <CardHeader>
               <CardTitle>Implementation checklist</CardTitle>
@@ -155,7 +155,7 @@ export function ComponentDocTemplate({
           </Card>
         </Flex>
 
-        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+        <Flex flex="1 1 16rem">
           <Card>
             <CardHeader>
               <CardTitle>Common pitfalls</CardTitle>
