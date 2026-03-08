@@ -29,7 +29,6 @@ export function ComponentDocTemplate({
     <Flex direction="column" gap="lg">
       <Card>
         <CardHeader>
-          <Badge variant="success">{doc.status}</Badge>
           <CardTitle>{doc.name}</CardTitle>
           <CardDescription>{doc.summary}</CardDescription>
         </CardHeader>
