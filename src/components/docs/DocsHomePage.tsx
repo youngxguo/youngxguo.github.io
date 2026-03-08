@@ -66,6 +66,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Flex,
+  Grid,
   FormField,
   FormFieldControl,
   FormFieldDescription,
@@ -595,30 +596,28 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         </CardHeader>
       </Card>
 
-      <Flex direction="row" gap="md" wrap="wrap" align="stretch">
+      <Grid columns="repeat(3, minmax(0, 1fr))" gap="md">
         {docsComponents.map((component) => (
-          <Flex key={component.id} flex="1 1 20rem">
-            <Card variant="outlined">
-              <CardHeader>
-                <Flex direction="row" align="center" justify="between" gap="sm" wrap="wrap">
-                  <CardTitle>{component.name}</CardTitle>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => openComponentDocs(component.id)}
-                  >
-                    Docs
-                  </Button>
-                </Flex>
-                <CardDescription>{component.summary}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ComponentPreview componentId={component.id} />
-              </CardContent>
-            </Card>
-          </Flex>
+          <Card key={component.id} variant="outlined">
+            <CardHeader>
+              <Flex direction="row" align="center" justify="between" gap="sm" wrap="wrap">
+                <CardTitle>{component.name}</CardTitle>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => openComponentDocs(component.id)}
+                >
+                  Docs
+                </Button>
+              </Flex>
+              <CardDescription>{component.summary}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ComponentPreview componentId={component.id} />
+            </CardContent>
+          </Card>
         ))}
-      </Flex>
+      </Grid>
     </Flex>
   );
 }
