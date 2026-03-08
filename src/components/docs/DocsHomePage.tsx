@@ -134,7 +134,12 @@ import {
   toast
 } from 'yxgui';
 import { siteConfig } from '../../siteConfig';
-import { type ComponentDocId, docsComponents } from './docsData';
+import {
+  type ComponentDocId,
+  docsCatalogGroups,
+  docsComponents,
+  getCatalogGroupAnchorId
+} from './docsData';
 
 interface DocsHomePageProps {
   onNavigate: (path: string) => void;
@@ -226,11 +231,15 @@ export function ComponentPreview({
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">Docs</BreadcrumbLink>
+              <BreadcrumbLink href="#">Workspace</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Components</BreadcrumbPage>
+              <BreadcrumbLink href="#">Design system</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -747,42 +756,85 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
   const openComponentDocs = (componentId: ComponentDocId) => {
     onNavigate(`/docs/components/${componentId}`);
   };
+  const openGroup = (groupTitle: string) => {
+    onNavigate(`/docs#${getCatalogGroupAnchorId(groupTitle)}`);
+  };
+
+  const docsByName = new Map(docsComponents.map((component) => [component.name, component]));
+  const groupedComponents = docsCatalogGroups
+    .map((group) => ({
+      ...group,
+      anchorId: getCatalogGroupAnchorId(group.title),
+      components: group.components
+        .map((name) => docsByName.get(name))
+        .filter((component): component is (typeof docsComponents)[number] => Boolean(component))
+    }))
+    .filter((group) => group.components.length > 0);
 
   return (
     <Flex direction="column" gap="lg">
       <Toaster />
 
-      <Card variant="elevated">
-        <CardHeader>
-          <CardTitle>Components</CardTitle>
-          <CardDescription>
-            Browse the component directory and jump into docs for each primitive.
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <Flex direction="column" gap="xs">
+        <Typography as="h2">Components</Typography>
+        <Typography as="p" variant="small">
+          Browse the component directory and jump into docs for each primitive.
+        </Typography>
+      </Flex>
+      <Separator decorative />
 
-      <Grid columns="repeat(3, minmax(0, 1fr))" gap="md">
-        {docsComponents.map((component) => (
-          <Card key={component.id} variant="outlined">
-            <CardHeader>
-              <Flex direction="row" align="center" justify="between" gap="sm" wrap="wrap">
-                <CardTitle>{component.name}</CardTitle>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => openComponentDocs(component.id)}
-                >
-                  Docs
-                </Button>
-              </Flex>
-              <CardDescription>{component.summary}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ComponentPreview componentId={component.id} />
-            </CardContent>
-          </Card>
+      <Flex direction="column" gap="xs">
+        <Typography as="p" variant="small">
+          Jump to section
+        </Typography>
+        <Flex direction="row" gap="xs" wrap="wrap">
+          {groupedComponents.map((group) => (
+            <Button
+              key={group.title}
+              size="sm"
+              variant="secondary"
+              onClick={() => openGroup(group.title)}
+            >
+              {group.title}
+            </Button>
+          ))}
+        </Flex>
+      </Flex>
+
+      <Flex direction="column" gap="lg">
+        {groupedComponents.map((group) => (
+          <Flex key={group.title} id={group.anchorId} direction="column" gap="sm">
+            <Flex direction="column" gap="xs" style={{ scrollMarginTop: '1rem' }}>
+              <Typography as="h3">{group.title}</Typography>
+              <Typography as="p" variant="small">
+                {group.summary}
+              </Typography>
+            </Flex>
+            <Grid columns="repeat(auto-fit, minmax(18rem, 1fr))" gap="md">
+              {group.components.map((component) => (
+                <Card key={component.id} variant="outlined">
+                  <CardHeader>
+                    <Flex direction="row" align="center" justify="between" gap="sm" wrap="wrap">
+                      <CardTitle>{component.name}</CardTitle>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => openComponentDocs(component.id)}
+                      >
+                        Docs
+                      </Button>
+                    </Flex>
+                    <CardDescription>{component.summary}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ComponentPreview componentId={component.id} />
+                  </CardContent>
+                </Card>
+              ))}
+            </Grid>
+          </Flex>
         ))}
-      </Grid>
+      </Flex>
     </Flex>
   );
 }

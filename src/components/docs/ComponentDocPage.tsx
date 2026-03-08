@@ -24,6 +24,7 @@ import { ComponentPreview } from './DocsHomePage';
 
 interface ComponentDocPageProps {
   componentId: ComponentDocId;
+  onNavigate: (path: string) => void;
 }
 
 type ComponentDocRecord = NonNullable<ReturnType<typeof getDocById>>;
@@ -229,7 +230,7 @@ const referenceRepresentativeExamples: Partial<
   }
 };
 
-export function ComponentDocPage({ componentId }: ComponentDocPageProps) {
+export function ComponentDocPage({ componentId, onNavigate }: ComponentDocPageProps) {
   const doc = getDocById(componentId);
 
   if (!doc) {
@@ -237,33 +238,39 @@ export function ComponentDocPage({ componentId }: ComponentDocPageProps) {
   }
 
   if (componentId === 'button') {
-    return <ButtonDoc doc={doc} />;
+    return <ButtonDoc doc={doc} onNavigate={onNavigate} />;
   }
 
   if (componentId === 'input') {
-    return <InputDoc doc={doc} />;
+    return <InputDoc doc={doc} onNavigate={onNavigate} />;
   }
 
   if (componentId === 'dialog') {
-    return <DialogDoc doc={doc} />;
+    return <DialogDoc doc={doc} onNavigate={onNavigate} />;
   }
 
   if (componentId === 'select') {
-    return <SelectDoc doc={doc} />;
+    return <SelectDoc doc={doc} onNavigate={onNavigate} />;
   }
 
   if (componentId === 'switch') {
-    return <SwitchDoc doc={doc} />;
+    return <SwitchDoc doc={doc} onNavigate={onNavigate} />;
   }
 
   if (componentId === 'textarea') {
-    return <TextareaDoc doc={doc} />;
+    return <TextareaDoc doc={doc} onNavigate={onNavigate} />;
   }
 
-  return <ReferenceDoc doc={doc} />;
+  return <ReferenceDoc doc={doc} onNavigate={onNavigate} />;
 }
 
-function ReferenceDoc({ doc }: { doc: ComponentDocRecord }) {
+function ReferenceDoc({
+  doc,
+  onNavigate
+}: {
+  doc: ComponentDocRecord;
+  onNavigate: (path: string) => void;
+}) {
   const propLines = doc.props
     .slice(0, 2)
     .map((prop) => `  ${prop.name}={/* ${prop.type} */}`)
@@ -296,10 +303,16 @@ function ReferenceDoc({ doc }: { doc: ComponentDocRecord }) {
     });
   }
 
-  return <ComponentDocTemplate doc={doc} examples={examples} />;
+  return <ComponentDocTemplate doc={doc} examples={examples} onNavigate={onNavigate} />;
 }
 
-function ButtonDoc({ doc }: { doc: ComponentDocRecord }) {
+function ButtonDoc({
+  doc,
+  onNavigate
+}: {
+  doc: ComponentDocRecord;
+  onNavigate: (path: string) => void;
+}) {
   const examples: ComponentStoryExample[] = [
     {
       id: 'primary-action',
@@ -322,10 +335,16 @@ function ButtonDoc({ doc }: { doc: ComponentDocRecord }) {
     }
   ];
 
-  return <ComponentDocTemplate doc={doc} examples={examples} />;
+  return <ComponentDocTemplate doc={doc} examples={examples} onNavigate={onNavigate} />;
 }
 
-function InputDoc({ doc }: { doc: ComponentDocRecord }) {
+function InputDoc({
+  doc,
+  onNavigate
+}: {
+  doc: ComponentDocRecord;
+  onNavigate: (path: string) => void;
+}) {
   const examples: ComponentStoryExample[] = [
     {
       id: 'basic',
@@ -362,10 +381,16 @@ function InputDoc({ doc }: { doc: ComponentDocRecord }) {
     }
   ];
 
-  return <ComponentDocTemplate doc={doc} examples={examples} />;
+  return <ComponentDocTemplate doc={doc} examples={examples} onNavigate={onNavigate} />;
 }
 
-function DialogDoc({ doc }: { doc: ComponentDocRecord }) {
+function DialogDoc({
+  doc,
+  onNavigate
+}: {
+  doc: ComponentDocRecord;
+  onNavigate: (path: string) => void;
+}) {
   const examples: ComponentStoryExample[] = [
     {
       id: 'basic-dialog',
@@ -389,10 +414,16 @@ function DialogDoc({ doc }: { doc: ComponentDocRecord }) {
     }
   ];
 
-  return <ComponentDocTemplate doc={doc} examples={examples} />;
+  return <ComponentDocTemplate doc={doc} examples={examples} onNavigate={onNavigate} />;
 }
 
-function SelectDoc({ doc }: { doc: ComponentDocRecord }) {
+function SelectDoc({
+  doc,
+  onNavigate
+}: {
+  doc: ComponentDocRecord;
+  onNavigate: (path: string) => void;
+}) {
   const examples: ComponentStoryExample[] = [
     {
       id: 'default-select',
@@ -434,10 +465,16 @@ function SelectDoc({ doc }: { doc: ComponentDocRecord }) {
     }
   ];
 
-  return <ComponentDocTemplate doc={doc} examples={examples} />;
+  return <ComponentDocTemplate doc={doc} examples={examples} onNavigate={onNavigate} />;
 }
 
-function SwitchDoc({ doc }: { doc: ComponentDocRecord }) {
+function SwitchDoc({
+  doc,
+  onNavigate
+}: {
+  doc: ComponentDocRecord;
+  onNavigate: (path: string) => void;
+}) {
   const examples: ComponentStoryExample[] = [
     {
       id: 'default-switch',
@@ -465,10 +502,16 @@ function SwitchDoc({ doc }: { doc: ComponentDocRecord }) {
     }
   ];
 
-  return <ComponentDocTemplate doc={doc} examples={examples} />;
+  return <ComponentDocTemplate doc={doc} examples={examples} onNavigate={onNavigate} />;
 }
 
-function TextareaDoc({ doc }: { doc: ComponentDocRecord }) {
+function TextareaDoc({
+  doc,
+  onNavigate
+}: {
+  doc: ComponentDocRecord;
+  onNavigate: (path: string) => void;
+}) {
   const examples: ComponentStoryExample[] = [
     {
       id: 'notes',
@@ -504,5 +547,5 @@ function TextareaDoc({ doc }: { doc: ComponentDocRecord }) {
     }
   ];
 
-  return <ComponentDocTemplate doc={doc} examples={examples} />;
+  return <ComponentDocTemplate doc={doc} examples={examples} onNavigate={onNavigate} />;
 }

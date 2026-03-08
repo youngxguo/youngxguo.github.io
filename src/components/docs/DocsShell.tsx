@@ -1,21 +1,24 @@
 import { ReactNode, useMemo, useState } from 'react';
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
   Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
   Flex,
   Input,
+  Separator,
   Typography
 } from 'yxgui';
-import { DocsIcon, GitHubIcon, HomeIcon } from '../icons';
-import { type ComponentDocId, docsCatalogGroups, docsComponents } from './docsData';
+import { GitHubIcon, HomeIcon } from '../icons';
+import {
+  type ComponentDocId,
+  docsCatalogGroups,
+  docsComponents,
+  getCatalogGroupAnchorId
+} from './docsData';
 
 interface DocsShellProps {
   activeComponentId?: ComponentDocId;
@@ -24,9 +27,6 @@ interface DocsShellProps {
 }
 
 const YXGUI_GITHUB_URL = 'https://github.com/youngxguo/yxgui';
-function getInitialExpandedSections(): string[] {
-  return docsCatalogGroups.length > 0 ? [docsCatalogGroups[0].title] : [];
-}
 
 function openExternal(url: string) {
   window.open(url, '_blank', 'noopener,noreferrer');
@@ -37,7 +37,6 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
     () => new Map(docsComponents.map((component) => [component.name, component])),
     []
   );
-  const [expandedSections, setExpandedSections] = useState<string[]>(getInitialExpandedSections);
   const [searchQuery, setSearchQuery] = useState('');
   const normalizedSearchQuery = searchQuery.trim().toLowerCase();
 
@@ -57,136 +56,181 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
       .filter((group) => group.components.length > 0);
   }, [docsByName, normalizedSearchQuery]);
 
-  const activeGroupTitle = useMemo(() => {
-    const activeComponentName = docsComponents.find(
-      (component) => component.id === activeComponentId
-    )?.name;
+  const activeComponentName = useMemo(
+    () => docsComponents.find((component) => component.id === activeComponentId)?.name,
+    [activeComponentId]
+  );
 
+  const activeGroupTitle = useMemo(() => {
     if (!activeComponentName) {
       return undefined;
     }
 
     return docsCatalogGroups.find((group) => group.components.includes(activeComponentName))?.title;
-  }, [activeComponentId]);
+  }, [activeComponentName]);
+  const activeGroupAnchorId = activeGroupTitle
+    ? getCatalogGroupAnchorId(activeGroupTitle)
+    : undefined;
 
-  const accordionValue = useMemo(() => {
+  const visibleCatalogGroups = useMemo(() => {
     if (normalizedSearchQuery.length > 0) {
-      return filteredCatalogGroups.map((group) => group.title);
+      return filteredCatalogGroups;
     }
 
     if (!activeGroupTitle) {
-      return expandedSections;
+      return filteredCatalogGroups;
     }
 
-    return Array.from(new Set([...expandedSections, activeGroupTitle]));
-  }, [activeGroupTitle, expandedSections, filteredCatalogGroups, normalizedSearchQuery]);
+    return [
+      ...filteredCatalogGroups.filter((group) => group.title === activeGroupTitle),
+      ...filteredCatalogGroups.filter((group) => group.title !== activeGroupTitle)
+    ];
+  }, [activeGroupTitle, filteredCatalogGroups, normalizedSearchQuery]);
 
   return (
-    <section aria-label="yxgui docs" style={{ height: '100dvh', overflow: 'hidden' }}>
+    <section
+      aria-label="yxgui docs"
+      style={{ padding: '1rem', height: '100dvh', overflow: 'hidden' }}
+    >
       <Flex direction="row" gap="lg" wrap="nowrap" style={{ height: '100%', minHeight: 0 }}>
         <Flex
           as="aside"
           direction="column"
-          style={{ flex: '0 0 20rem', minWidth: '18rem', minHeight: 0 }}
+          gap="md"
+          style={{
+            flex: '0 0 19rem',
+            minWidth: '16rem',
+            minHeight: 0,
+            paddingInlineEnd: '1rem',
+            borderRight: '1px solid color-mix(in srgb, currentColor 16%, transparent)'
+          }}
         >
-          <Card style={{ height: '100%', minHeight: 0, overflow: 'hidden' }}>
-            <CardHeader>
-              <Flex direction="column" gap="md">
-                <Flex direction="column" gap="xs">
-                  <CardTitle>Navigation</CardTitle>
-                  <CardDescription>Jump between component docs by section.</CardDescription>
-                </Flex>
-                <Input
-                  size="sm"
-                  placeholder="Search components"
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  aria-label="Search components"
-                />
-              </Flex>
-            </CardHeader>
-            <CardContent style={{ minHeight: 0, overflowY: 'auto' }}>
-              <Flex direction="column" gap="md">
-                <Button
-                  variant={!activeComponentId ? 'primary' : 'secondary'}
-                  size="sm"
-                  onClick={() => onNavigate('/docs')}
-                >
-                  Overview
-                </Button>
+          <Flex direction="column" gap="xs">
+            <Typography as="h2">Navigation</Typography>
+            <Typography as="p" variant="small">
+              Jump between component docs by section.
+            </Typography>
+          </Flex>
+          <Input
+            size="sm"
+            placeholder="Search components"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            aria-label="Search components"
+          />
+          <Separator decorative />
+          <Flex
+            direction="column"
+            gap="sm"
+            style={{ minHeight: 0, overflowY: 'auto', paddingInlineEnd: '0.25rem' }}
+          >
+            <Button
+              variant={!activeComponentId ? 'primary' : 'secondary'}
+              size="sm"
+              onClick={() => onNavigate('/docs')}
+            >
+              Overview
+            </Button>
 
-                {filteredCatalogGroups.length > 0 ? (
-                  <Accordion
-                    type="multiple"
-                    value={accordionValue}
-                    onValueChange={setExpandedSections}
-                  >
-                    {filteredCatalogGroups.map((group) => (
-                      <AccordionItem key={group.title} value={group.title}>
-                        <AccordionTrigger variant="ghost" size="sm">
-                          {group.title}
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <Flex direction="column" gap="xs">
-                            {group.components.map((component) => (
-                              <Button
-                                key={component.id}
-                                variant={activeComponentId === component.id ? 'primary' : 'ghost'}
-                                size="sm"
-                                onClick={() => onNavigate(`/docs/components/${component.id}`)}
-                              >
-                                {component.name}
-                              </Button>
-                            ))}
-                          </Flex>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                ) : (
-                  <Typography as="p" variant="small">
-                    No components match: <code>{searchQuery.trim()}</code>.
-                  </Typography>
-                )}
+            {visibleCatalogGroups.length > 0 ? (
+              <Flex direction="column" gap="md">
+                {visibleCatalogGroups.map((group) => (
+                  <Flex key={group.title} direction="column" gap="xs">
+                    <Typography as="p" variant="small">
+                      {group.title}
+                    </Typography>
+                    <Flex direction="column" gap="xs" style={{ paddingInlineStart: '0.5rem' }}>
+                      {group.components.map((component) => (
+                        <Button
+                          key={component.id}
+                          variant={activeComponentId === component.id ? 'primary' : 'ghost'}
+                          size="sm"
+                          onClick={() => onNavigate(`/docs/components/${component.id}`)}
+                        >
+                          {component.name}
+                        </Button>
+                      ))}
+                    </Flex>
+                  </Flex>
+                ))}
               </Flex>
-            </CardContent>
-          </Card>
+            ) : (
+              <Typography as="p" variant="small">
+                No components match: <code>{searchQuery.trim()}</code>.
+              </Typography>
+            )}
+          </Flex>
         </Flex>
 
         <Flex
           as="section"
           direction="column"
-          gap="lg"
+          gap="md"
           grow={1}
-          style={{ minHeight: 0, minWidth: 0 }}
+          style={{ minWidth: 0, minHeight: 0, flex: '3 1 42rem', paddingInlineStart: '0.25rem' }}
         >
-          <Card>
-            <CardHeader>
-              <Flex direction="row" align="center" justify="between" wrap="wrap" gap="sm">
-                <Flex direction="column" gap="xs" grow={1}>
-                  <CardTitle>Component docs</CardTitle>
-                  <CardDescription>
-                    Concise docs with live examples and copyable snippets.
-                  </CardDescription>
-                </Flex>
-                <Flex direction="row" wrap="wrap" gap="xs">
-                  <Button variant="secondary" onClick={() => openExternal(YXGUI_GITHUB_URL)}>
-                    <GitHubIcon />
-                    GitHub
-                  </Button>
-                  <Button variant="secondary" onClick={() => onNavigate('/')}>
-                    <HomeIcon />
-                    Home
-                  </Button>
-                  <Button variant="secondary" onClick={() => onNavigate('/docs')}>
-                    <DocsIcon />
-                    Docs
-                  </Button>
-                </Flex>
-              </Flex>
-            </CardHeader>
-          </Card>
-          <Flex direction="column" gap="lg" grow={1} style={{ minHeight: 0, overflowY: 'auto' }}>
+          <Flex direction="row" align="start" justify="between" wrap="wrap" gap="sm">
+            <Flex direction="column" gap="xs" grow={1}>
+              <Typography as="h1">Component docs</Typography>
+              <Typography as="p" variant="small">
+                Concise docs with live examples and copyable snippets.
+              </Typography>
+              {activeComponentName ? (
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink
+                        href="/docs"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          onNavigate('/docs');
+                        }}
+                      >
+                        Overview
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    {activeGroupTitle && activeGroupAnchorId ? (
+                      <>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                          <BreadcrumbLink
+                            href={`/docs#${activeGroupAnchorId}`}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              onNavigate(`/docs#${activeGroupAnchorId}`);
+                            }}
+                          >
+                            {activeGroupTitle}
+                          </BreadcrumbLink>
+                        </BreadcrumbItem>
+                      </>
+                    ) : null}
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>{activeComponentName}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              ) : null}
+            </Flex>
+            <Flex direction="row" wrap="wrap" gap="xs">
+              <Button variant="secondary" onClick={() => openExternal(YXGUI_GITHUB_URL)}>
+                <GitHubIcon />
+                GitHub
+              </Button>
+              <Button variant="secondary" onClick={() => onNavigate('/')}>
+                <HomeIcon />
+                Home
+              </Button>
+            </Flex>
+          </Flex>
+          <Separator decorative />
+          <Flex
+            direction="column"
+            gap="lg"
+            grow={1}
+            style={{ minHeight: 0, overflowY: 'auto', paddingInlineEnd: '0.25rem' }}
+          >
             {children}
           </Flex>
         </Flex>

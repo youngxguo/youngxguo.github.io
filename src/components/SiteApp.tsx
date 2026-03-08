@@ -6,11 +6,14 @@ import { NotFoundPage } from './NotFoundPage';
 type Route = { kind: 'home' } | { kind: 'docs'; componentId?: string } | { kind: 'not-found' };
 
 function normalizePath(pathname: string): string {
-  if (pathname.length > 1 && pathname.endsWith('/')) {
-    return pathname.slice(0, -1);
+  const [pathWithoutHash] = pathname.split('#');
+  const [path] = pathWithoutHash.split('?');
+
+  if (path.length > 1 && path.endsWith('/')) {
+    return path.slice(0, -1);
   }
 
-  return pathname;
+  return path;
 }
 
 export function parseRoute(pathname: string): Route {
@@ -43,6 +46,16 @@ export function SiteApp() {
   useEffect(() => {
     const handlePopState = () => {
       setRoute(parseRoute(window.location.pathname));
+
+      if (window.location.hash) {
+        window.requestAnimationFrame(() => {
+          const targetElement = document.getElementById(window.location.hash.replace('#', ''));
+
+          if (targetElement) {
+            targetElement.scrollIntoView({ block: 'start' });
+          }
+        });
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -53,12 +66,31 @@ export function SiteApp() {
   }, []);
 
   const navigate = useCallback((path: string) => {
-    if (window.location.pathname === path) {
+    const nextUrl = new URL(path, window.location.origin);
+    const nextLocation = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
+    const currentLocation = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+    if (currentLocation === nextLocation) {
       return;
     }
 
-    window.history.pushState({}, '', path);
-    setRoute(parseRoute(path));
+    window.history.pushState({}, '', nextLocation);
+    setRoute(parseRoute(nextUrl.pathname));
+
+    if (nextUrl.hash) {
+      window.requestAnimationFrame(() => {
+        const targetElement = document.getElementById(nextUrl.hash.replace('#', ''));
+
+        if (targetElement) {
+          targetElement.scrollIntoView({ block: 'start' });
+          return;
+        }
+
+        window.scrollTo(0, 0);
+      });
+      return;
+    }
+
     window.scrollTo(0, 0);
   }, []);
 

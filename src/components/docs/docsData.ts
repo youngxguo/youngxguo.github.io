@@ -181,6 +181,17 @@ export const docsCatalogGroups: DocsCatalogGroup[] = [
   }
 ];
 
+function slugifyCatalogGroupTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function getCatalogGroupAnchorId(title: string): string {
+  return `catalog-${slugifyCatalogGroupTitle(title)}`;
+}
+
 const coreDocs: ComponentDoc[] = [
   {
     id: 'button',
