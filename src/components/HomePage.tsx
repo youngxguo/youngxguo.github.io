@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
   Flex,
-  Separator,
   Typography
 } from 'yxgui';
 import { siteConfig } from '../siteConfig';
@@ -58,7 +57,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
             </Flex>
           </CardFooter>
         </Card>
-        <Separator decorative />
         <Typography as="p" variant="small">
           {siteConfig.name} © {new Date().getFullYear()}
         </Typography>
