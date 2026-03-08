@@ -7,9 +7,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
   Flex,
   Typography
 } from 'yxgui';
+import { DocsIcon, EmailIcon, GitHubIcon, LinkedInIcon } from './icons';
 import { siteConfig } from '../siteConfig';
 
 interface HomePageProps {
@@ -23,6 +28,8 @@ function openExternal(url: string) {
 function openMailto(url: string) {
   window.location.href = url;
 }
+
+const YXGUI_GITHUB_URL = 'https://github.com/youngxguo/yxgui';
 
 export function HomePage({ onNavigate }: HomePageProps) {
   return (
@@ -45,15 +52,45 @@ export function HomePage({ onNavigate }: HomePageProps) {
           <CardFooter>
             <Flex direction="row" gap="sm" wrap="wrap">
               <Button variant="secondary" onClick={() => openExternal(siteConfig.links.github)}>
-                GitHub
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <GitHubIcon />
+                  GitHub
+                </span>
               </Button>
               <Button variant="secondary" onClick={() => openExternal(siteConfig.links.linkedin)}>
-                LinkedIn
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <LinkedInIcon />
+                  LinkedIn
+                </span>
               </Button>
-              <Button onClick={() => openMailto(siteConfig.links.email)}>Email</Button>
-              <Button variant="ghost" onClick={() => onNavigate('/docs')}>
-                yxgui docs
+              <Button onClick={() => openMailto(siteConfig.links.email)}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <EmailIcon />
+                  Email
+                </span>
               </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger variant="ghost">
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <DocsIcon />
+                    yxgui
+                  </span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onSelect={() => onNavigate('/docs')}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <DocsIcon />
+                      Docs
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => openExternal(YXGUI_GITHUB_URL)}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <GitHubIcon />
+                      yxgui GitHub
+                    </span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </Flex>
           </CardFooter>
         </Card>
