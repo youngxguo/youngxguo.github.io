@@ -134,7 +134,9 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
               <Flex direction="row" align="center" justify="between" wrap="wrap" gap="sm">
                 <Flex direction="column" gap="xs" grow={1}>
                   <CardTitle>Component docs</CardTitle>
-                  <CardDescription>Public docs + live playgrounds for the library.</CardDescription>
+                  <CardDescription>
+                    Concise docs with live examples and copyable snippets.
+                  </CardDescription>
                 </Flex>
                 <Flex direction="row" wrap="wrap" gap="xs">
                   <Button variant="secondary" onClick={() => openExternal(YXGUI_GITHUB_URL)}>

@@ -35,7 +35,7 @@ describe('App', () => {
     render(<App />);
 
     expect(screen.getByText('Component docs')).toBeInTheDocument();
-    expect(screen.getByText('Live playground')).toBeInTheDocument();
+    expect(screen.getByText('Primary action')).toBeInTheDocument();
     const githubButton = screen.getByRole('button', { name: 'GitHub' });
     expect(githubButton).toBeInTheDocument();
     expect(githubButton.querySelector('svg')).not.toBeNull();
@@ -47,6 +47,6 @@ describe('App', () => {
     render(<App />);
 
     expect(screen.getByRole('heading', { name: 'Accordion' })).toBeInTheDocument();
-    expect(screen.getByText('Reference page')).toBeInTheDocument();
+    expect(screen.getByText('Basic usage')).toBeInTheDocument();
   });
 });

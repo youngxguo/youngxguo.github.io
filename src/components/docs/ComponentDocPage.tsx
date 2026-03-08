@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -19,18 +18,216 @@ import {
   Textarea,
   Typography
 } from 'yxgui';
-import { ComponentDocTemplate } from './ComponentDocTemplate';
+import { ComponentDocTemplate, type ComponentStoryExample } from './ComponentDocTemplate';
 import { getDocById, type ComponentDocId } from './docsData';
+import { ComponentPreview } from './DocsHomePage';
 
 interface ComponentDocPageProps {
   componentId: ComponentDocId;
 }
 
-const buttonVariants = ['primary', 'secondary', 'ghost'] as const;
-const buttonSizes = ['sm', 'md', 'lg'] as const;
-const fieldSizes = ['sm', 'md', 'lg'] as const;
-const switchSizes = ['sm', 'md'] as const;
-const textareaRows = [3, 4, 6] as const;
+type ComponentDocRecord = NonNullable<ReturnType<typeof getDocById>>;
+
+interface ReferenceRepresentativeExample {
+  title: string;
+  description: string;
+  code: string;
+}
+
+const referenceRepresentativeExamples: Partial<
+  Record<ComponentDocId, ReferenceRepresentativeExample>
+> = {
+  accordion: {
+    title: 'Representative pattern',
+    description: 'Use multiple accordion items to group related sections.',
+    code: `import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from 'yxgui';
+
+<Accordion type="single" collapsible defaultValue="account">
+  <AccordionItem value="account">
+    <AccordionTrigger>Account settings</AccordionTrigger>
+    <AccordionContent>Profile and account preferences.</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="security">
+    <AccordionTrigger>Security</AccordionTrigger>
+    <AccordionContent>Password and sign-in controls.</AccordionContent>
+  </AccordionItem>
+</Accordion>`
+  },
+  card: {
+    title: 'Representative pattern',
+    description: 'Use cards to combine title, description, and status content.',
+    code: `import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from 'yxgui';
+
+<Card variant="elevated">
+  <CardHeader>
+    <CardTitle>Release checklist</CardTitle>
+    <CardDescription>Ship quality updates with clear status.</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <Badge variant="success">Ready to deploy</Badge>
+  </CardContent>
+</Card>`
+  },
+  menubar: {
+    title: 'Representative pattern',
+    description: 'Add multiple menus for desktop-style command surfaces.',
+    code: `import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger
+} from 'yxgui';
+
+<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>File</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>New</MenubarItem>
+      <MenubarItem>Save</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+  <MenubarMenu>
+    <MenubarTrigger>Edit</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Undo</MenubarItem>
+      <MenubarItem>Redo</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>`
+  },
+  pagination: {
+    title: 'Representative pattern',
+    description: 'Show adjacent pages with a clear active page indicator.',
+    code: `import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from 'yxgui';
+
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href="#" />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">1</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#" isActive>
+        2
+      </PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">3</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext href="#" />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>`
+  },
+  tabs: {
+    title: 'Representative pattern',
+    description: 'Use tabs to organize multiple related views in one area.',
+    code: `import { Tabs, TabsList, TabsPanel, TabsTrigger } from 'yxgui';
+
+<Tabs defaultValue="overview">
+  <TabsList>
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="activity">Activity</TabsTrigger>
+    <TabsTrigger value="settings">Settings</TabsTrigger>
+  </TabsList>
+  <TabsPanel value="overview">High-level status and summary metrics.</TabsPanel>
+  <TabsPanel value="activity">Recent events and team updates.</TabsPanel>
+  <TabsPanel value="settings">Configuration and access controls.</TabsPanel>
+</Tabs>`
+  },
+  table: {
+    title: 'Representative pattern',
+    description: 'Use table for record sets with multiple aligned columns.',
+    code: `import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from 'yxgui';
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Owner</TableHead>
+      <TableHead>Status</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>API docs</TableCell>
+      <TableCell>Platform</TableCell>
+      <TableCell>Ready</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Marketing site</TableCell>
+      <TableCell>Growth</TableCell>
+      <TableCell>In review</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>`
+  },
+  'dropdown-menu': {
+    title: 'Representative pattern',
+    description: 'Use dropdown menus to group common row or page actions.',
+    code: `import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from 'yxgui';
+
+<DropdownMenu>
+  <DropdownMenuTrigger variant="secondary">Team actions</DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>Edit</DropdownMenuItem>
+    <DropdownMenuItem>Duplicate</DropdownMenuItem>
+    <DropdownMenuItem>Archive</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>`
+  },
+  badge: {
+    title: 'Representative pattern',
+    description: 'Use status badges to quickly communicate item state.',
+    code: `import { Badge, Flex } from 'yxgui';
+
+<Flex direction="row" gap="xs" wrap="wrap">
+  <Badge variant="success">Ready</Badge>
+  <Badge variant="neutral">Needs review</Badge>
+  <Badge variant="outline">Blocked</Badge>
+</Flex>`
+  },
+  progress: {
+    title: 'Representative pattern',
+    description: 'Pair progress bars with context text for long-running tasks.',
+    code: `import { Flex, Progress, Typography } from 'yxgui';
+
+<Flex direction="column" gap="xs">
+  <Typography as="p" variant="small">
+    Uploading assets
+  </Typography>
+  <Progress value={82} />
+</Flex>`
+  }
+};
 
 export function ComponentDocPage({ componentId }: ComponentDocPageProps) {
   const doc = getDocById(componentId);
@@ -66,543 +263,246 @@ export function ComponentDocPage({ componentId }: ComponentDocPageProps) {
   return <ReferenceDoc doc={doc} />;
 }
 
-function ReferenceDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
-  const codeSample = useMemo(() => {
-    const propLines = doc.props
-      .slice(0, 3)
-      .map((prop) => `  ${prop.name}={/* ${prop.type} */}`)
-      .join('\n');
+function ReferenceDoc({ doc }: { doc: ComponentDocRecord }) {
+  const propLines = doc.props
+    .slice(0, 2)
+    .map((prop) => `  ${prop.name}={/* ${prop.type} */}`)
+    .join('\n');
 
-    return `import { ${doc.name} } from 'yxgui';
+  const examples: ComponentStoryExample[] = [
+    {
+      id: 'basic-usage',
+      title: 'Basic usage',
+      description: 'Start with the smallest working setup.',
+      code: `import { ${doc.name} } from 'yxgui';\n\n<${doc.name} />`,
+      preview: <ComponentPreview componentId={doc.id} />
+    },
+    {
+      id: 'common-props',
+      title: 'Common props',
+      description: 'Add props for state, variants, or behavior as your usage grows.',
+      code: `import { ${doc.name} } from 'yxgui';\n\n<${doc.name}\n${propLines}\n/>`,
+      preview: <ComponentPreview componentId={doc.id} />
+    }
+  ];
 
-<${doc.name}
-${propLines}
->
-  {/* Compose ${doc.name} in your product surface */}
-</${doc.name}>`;
-  }, [doc]);
+  const representativeExample = referenceRepresentativeExamples[doc.id];
 
-  return (
-    <ComponentDocTemplate
-      doc={doc}
-      controls={
-        <Flex direction="column" gap="xs">
-          <Typography as="p" variant="small">
-            Reference page
-          </Typography>
-          <Typography as="p">
-            Deep playground controls for this component are still being expanded.
-          </Typography>
-        </Flex>
-      }
-      preview={
-        <Flex direction="column" gap="sm">
-          <Typography as="p">
-            Use the API snapshot below as the source of truth for initial integration.
-          </Typography>
-          <Typography as="p" variant="small">
-            Tip: start with production usage notes and wire the minimal props first.
-          </Typography>
-        </Flex>
-      }
-      codeSample={codeSample}
-    />
-  );
+  if (representativeExample) {
+    examples.push({
+      id: 'representative-pattern',
+      ...representativeExample,
+      preview: <ComponentPreview componentId={doc.id} variant="representative" />
+    });
+  }
+
+  return <ComponentDocTemplate doc={doc} examples={examples} />;
 }
 
-function ButtonDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
-  const [variant, setVariant] = useState<(typeof buttonVariants)[number]>('primary');
-  const [size, setSize] = useState<(typeof buttonSizes)[number]>('md');
-  const [disabled, setDisabled] = useState(false);
-  const [label, setLabel] = useState('Ship release');
-
-  const codeSample = useMemo(
-    () =>
-      `<Button variant="${variant}" size="${size}"${disabled ? ' disabled' : ''}>\n  ${label || 'Ship release'}\n</Button>`,
-    [variant, size, disabled, label]
-  );
-
-  return (
-    <ComponentDocTemplate
-      doc={doc}
-      controls={
-        <Flex direction="column" gap="md">
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="button-variant">Variant</Label>
-            <Select
-              id="button-variant"
-              value={variant}
-              onChange={(event) =>
-                setVariant(event.currentTarget.value as (typeof buttonVariants)[number])
-              }
-            >
-              {buttonVariants.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="button-size">Size</Label>
-            <Select
-              id="button-size"
-              value={size}
-              onChange={(event) =>
-                setSize(event.currentTarget.value as (typeof buttonSizes)[number])
-              }
-            >
-              {buttonSizes.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="button-label">Label</Label>
-            <Input
-              id="button-label"
-              value={label}
-              onChange={(event) => setLabel(event.currentTarget.value)}
-            />
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="button-disabled">Disabled</Label>
-            <Switch id="button-disabled" checked={disabled} onCheckedChange={setDisabled} />
-          </Flex>
+function ButtonDoc({ doc }: { doc: ComponentDocRecord }) {
+  const examples: ComponentStoryExample[] = [
+    {
+      id: 'primary-action',
+      title: 'Primary action',
+      description: 'Use a single primary button for the main action in a section.',
+      code: `import { Button } from 'yxgui';\n\n<Button>Save changes</Button>`,
+      preview: <Button>Save changes</Button>
+    },
+    {
+      id: 'action-group',
+      title: 'Action group',
+      description: 'Pair one primary action with one lower-emphasis secondary action.',
+      code: `import { Button, Flex } from 'yxgui';\n\n<Flex direction="row" gap="sm">\n  <Button variant="secondary">Cancel</Button>\n  <Button>Ship release</Button>\n</Flex>`,
+      preview: (
+        <Flex direction="row" gap="sm">
+          <Button variant="secondary">Cancel</Button>
+          <Button>Ship release</Button>
         </Flex>
-      }
-      preview={
-        <Button variant={variant} size={size} disabled={disabled}>
-          {label || 'Ship release'}
-        </Button>
-      }
-      codeSample={codeSample}
-    />
-  );
+      )
+    }
+  ];
+
+  return <ComponentDocTemplate doc={doc} examples={examples} />;
 }
 
-function InputDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
-  const [size, setSize] = useState<(typeof fieldSizes)[number]>('md');
-  const [invalid, setInvalid] = useState(false);
-  const [disabled, setDisabled] = useState(false);
-  const [value, setValue] = useState('');
-
-  const codeSample = useMemo(() => {
-    const invalidLine = invalid ? ' invalid' : '';
-    const disabledLine = disabled ? ' disabled' : '';
-
-    return `<Label htmlFor="email" required>
-  Work email
-</Label>
-<Input id="email" size="${size}" placeholder="name@company.com"${invalidLine}${disabledLine} />`;
-  }, [size, invalid, disabled]);
-
-  return (
-    <ComponentDocTemplate
-      doc={doc}
-      controls={
-        <Flex direction="column" gap="md">
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="input-size">Size</Label>
-            <Select
-              id="input-size"
-              value={size}
-              onChange={(event) =>
-                setSize(event.currentTarget.value as (typeof fieldSizes)[number])
-              }
-            >
-              {fieldSizes.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="input-invalid">Invalid</Label>
-            <Switch id="input-invalid" checked={invalid} onCheckedChange={setInvalid} />
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="input-disabled">Disabled</Label>
-            <Switch id="input-disabled" checked={disabled} onCheckedChange={setDisabled} />
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="input-value">Value</Label>
-            <Input
-              id="input-value"
-              size="sm"
-              value={value}
-              placeholder="Type preview value"
-              onChange={(event) => setValue(event.currentTarget.value)}
-            />
-          </Flex>
-        </Flex>
-      }
-      preview={
+function InputDoc({ doc }: { doc: ComponentDocRecord }) {
+  const examples: ComponentStoryExample[] = [
+    {
+      id: 'basic',
+      title: 'Labeled field',
+      description: 'Keep labels explicit and place helper text directly below the input.',
+      code: `import { Input, Label, Typography } from 'yxgui';\n\n<Label htmlFor="email" required>\n  Work email\n</Label>\n<Input id="email" placeholder="name@company.com" />\n<Typography as="small" variant="small">\n  We use this address for invites.\n</Typography>`,
+      preview: (
         <Flex direction="column" gap="sm">
-          <Label htmlFor="doc-input" required>
+          <Label htmlFor="email-story" required>
             Work email
           </Label>
-          <Input
-            id="doc-input"
-            size={size}
-            value={value}
-            placeholder="name@company.com"
-            invalid={invalid ? true : undefined}
-            disabled={disabled}
-            onChange={(event) => setValue(event.currentTarget.value)}
-          />
+          <Input id="email-story" placeholder="name@company.com" />
           <Typography as="small" variant="small">
-            Use your company domain for invitations.
+            We use this address for invites.
           </Typography>
-          {invalid ? (
-            <Alert variant="error">
-              <AlertTitle>Invalid email</AlertTitle>
-              <AlertDescription>Enter a valid company email.</AlertDescription>
-            </Alert>
-          ) : null}
         </Flex>
-      }
-      codeSample={codeSample}
-    />
-  );
+      )
+    },
+    {
+      id: 'invalid',
+      title: 'Invalid state',
+      description: 'Show invalid styling and an inline alert when validation fails.',
+      code: `import { Alert, AlertDescription, AlertTitle, Input, Label } from 'yxgui';\n\n<Label htmlFor="email">Work email</Label>\n<Input id="email" invalid placeholder="name@company.com" />\n<Alert variant="error">\n  <AlertTitle>Invalid email</AlertTitle>\n  <AlertDescription>Use your company email address.</AlertDescription>\n</Alert>`,
+      preview: (
+        <Flex direction="column" gap="sm">
+          <Label htmlFor="invalid-email-story">Work email</Label>
+          <Input id="invalid-email-story" invalid placeholder="name@company.com" />
+          <Alert variant="error">
+            <AlertTitle>Invalid email</AlertTitle>
+            <AlertDescription>Use your company email address.</AlertDescription>
+          </Alert>
+        </Flex>
+      )
+    }
+  ];
+
+  return <ComponentDocTemplate doc={doc} examples={examples} />;
 }
 
-function DialogDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
-  const [open, setOpen] = useState(false);
-  const [closeOnOverlayClick, setCloseOnOverlayClick] = useState(true);
-  const [inviteEmail, setInviteEmail] = useState('');
-
-  const codeSample = useMemo(
-    () => `<Dialog open={open} onOpenChange={setOpen}>
-  <DialogTrigger>Invite teammate</DialogTrigger>
-  <DialogContent closeOnOverlayClick={${closeOnOverlayClick}}>
-    <DialogTitle>Invite teammate</DialogTitle>
-    <DialogDescription>
-      Send a lightweight invite without leaving the current page.
-    </DialogDescription>
-    <Input placeholder="name@company.com" />
-    <DialogFooter>
-      <DialogClose variant="secondary">Cancel</DialogClose>
-      <Button>Send invite</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>`,
-    [closeOnOverlayClick]
-  );
-
-  return (
-    <ComponentDocTemplate
-      doc={doc}
-      controls={
-        <Flex direction="column" gap="md">
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="dialog-overlay-close">Overlay click closes</Label>
-            <Switch
-              id="dialog-overlay-close"
-              checked={closeOnOverlayClick}
-              onCheckedChange={setCloseOnOverlayClick}
-            />
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="invite-email">Invite email</Label>
-            <Input
-              id="invite-email"
-              value={inviteEmail}
-              placeholder="name@company.com"
-              onChange={(event) => setInviteEmail(event.currentTarget.value)}
-            />
-          </Flex>
-        </Flex>
-      }
-      preview={
-        <Dialog open={open} onOpenChange={setOpen}>
+function DialogDoc({ doc }: { doc: ComponentDocRecord }) {
+  const examples: ComponentStoryExample[] = [
+    {
+      id: 'basic-dialog',
+      title: 'Basic dialog',
+      description: 'Use dialog for short, focused tasks that need confirmation.',
+      code: `import {\n  Button,\n  Dialog,\n  DialogClose,\n  DialogContent,\n  DialogDescription,\n  DialogFooter,\n  DialogTitle,\n  DialogTrigger,\n  Input\n} from 'yxgui';\n\n<Dialog>\n  <DialogTrigger>Invite teammate</DialogTrigger>\n  <DialogContent>\n    <DialogTitle>Invite teammate</DialogTitle>\n    <DialogDescription>\n      Send an invite without leaving this page.\n    </DialogDescription>\n    <Input placeholder="name@company.com" />\n    <DialogFooter>\n      <DialogClose variant="secondary">Cancel</DialogClose>\n      <Button>Send invite</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>`,
+      preview: (
+        <Dialog>
           <DialogTrigger>Invite teammate</DialogTrigger>
-          <DialogContent closeOnOverlayClick={closeOnOverlayClick}>
+          <DialogContent>
             <DialogTitle>Invite teammate</DialogTitle>
-            <DialogDescription>
-              Send an invite without disrupting your current workflow.
-            </DialogDescription>
-            <Input
-              value={inviteEmail}
-              placeholder="name@company.com"
-              onChange={(event) => setInviteEmail(event.currentTarget.value)}
-            />
+            <DialogDescription>Send an invite without leaving this page.</DialogDescription>
+            <Input placeholder="name@company.com" />
             <DialogFooter>
               <DialogClose variant="secondary">Cancel</DialogClose>
-              <Button disabled={!inviteEmail.trim()} onClick={() => setOpen(false)}>
-                Send invite
-              </Button>
+              <Button>Send invite</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      }
-      codeSample={codeSample}
-    />
-  );
+      )
+    }
+  ];
+
+  return <ComponentDocTemplate doc={doc} examples={examples} />;
 }
 
-function SelectDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
-  const [size, setSize] = useState<(typeof fieldSizes)[number]>('md');
-  const [invalid, setInvalid] = useState(false);
-  const [disabled, setDisabled] = useState(false);
-  const [value, setValue] = useState('engineering');
-
-  const codeSample = useMemo(() => {
-    const invalidLine = invalid ? ' invalid' : '';
-    const disabledLine = disabled ? ' disabled' : '';
-
-    return `<Label htmlFor="team">Team</Label>
-<Select id="team" size="${size}"${invalidLine}${disabledLine}>
-  <option value="">Select a team</option>
-  <option value="engineering">Engineering</option>
-  <option value="design">Design</option>
-  <option value="product">Product</option>
-</Select>`;
-  }, [disabled, invalid, size]);
-
-  return (
-    <ComponentDocTemplate
-      doc={doc}
-      controls={
-        <Flex direction="column" gap="md">
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="select-size">Size</Label>
-            <Select
-              id="select-size"
-              value={size}
-              onChange={(event) =>
-                setSize(event.currentTarget.value as (typeof fieldSizes)[number])
-              }
-            >
-              {fieldSizes.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="select-invalid">Invalid</Label>
-            <Switch id="select-invalid" checked={invalid} onCheckedChange={setInvalid} />
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="select-disabled">Disabled</Label>
-            <Switch id="select-disabled" checked={disabled} onCheckedChange={setDisabled} />
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="select-value">Selected value</Label>
-            <Select
-              id="select-value"
-              value={value}
-              onChange={(event) => setValue(event.currentTarget.value)}
-            >
-              <option value="engineering">Engineering</option>
-              <option value="design">Design</option>
-              <option value="product">Product</option>
-            </Select>
-          </Flex>
-        </Flex>
-      }
-      preview={
+function SelectDoc({ doc }: { doc: ComponentDocRecord }) {
+  const examples: ComponentStoryExample[] = [
+    {
+      id: 'default-select',
+      title: 'Team picker',
+      description: 'Use a select when users choose from a fixed list of options.',
+      code: `import { Label, Select } from 'yxgui';\n\n<Label htmlFor="team">Team</Label>\n<Select id="team" defaultValue="engineering">\n  <option value="">Select a team</option>\n  <option value="engineering">Engineering</option>\n  <option value="design">Design</option>\n  <option value="product">Product</option>\n</Select>`,
+      preview: (
         <Flex direction="column" gap="sm">
-          <Label htmlFor="doc-select">Team</Label>
-          <Select
-            id="doc-select"
-            size={size}
-            invalid={invalid ? true : undefined}
-            disabled={disabled}
-            value={value}
-            onChange={(event) => setValue(event.currentTarget.value)}
-          >
+          <Label htmlFor="team-story">Team</Label>
+          <Select id="team-story" defaultValue="engineering">
             <option value="">Select a team</option>
             <option value="engineering">Engineering</option>
             <option value="design">Design</option>
             <option value="product">Product</option>
           </Select>
-          <Typography as="small" variant="small">
-            Selected value: {value || 'none'}
-          </Typography>
-          {invalid ? (
-            <Alert variant="error">
-              <AlertTitle>Choose a valid option</AlertTitle>
-              <AlertDescription>Select a team before continuing.</AlertDescription>
-            </Alert>
-          ) : null}
         </Flex>
-      }
-      codeSample={codeSample}
-    />
-  );
+      )
+    },
+    {
+      id: 'invalid-select',
+      title: 'Validation feedback',
+      description: 'Keep validation feedback close to the field so users can recover quickly.',
+      code: `import { Alert, AlertDescription, AlertTitle, Label, Select } from 'yxgui';\n\n<Label htmlFor="team">Team</Label>\n<Select id="team" invalid defaultValue="">\n  <option value="">Select a team</option>\n  <option value="engineering">Engineering</option>\n  <option value="design">Design</option>\n  <option value="product">Product</option>\n</Select>\n<Alert variant="error">\n  <AlertTitle>Required field</AlertTitle>\n  <AlertDescription>Please choose a team.</AlertDescription>\n</Alert>`,
+      preview: (
+        <Flex direction="column" gap="sm">
+          <Label htmlFor="invalid-team-story">Team</Label>
+          <Select id="invalid-team-story" invalid defaultValue="">
+            <option value="">Select a team</option>
+            <option value="engineering">Engineering</option>
+            <option value="design">Design</option>
+            <option value="product">Product</option>
+          </Select>
+          <Alert variant="error">
+            <AlertTitle>Required field</AlertTitle>
+            <AlertDescription>Please choose a team.</AlertDescription>
+          </Alert>
+        </Flex>
+      )
+    }
+  ];
+
+  return <ComponentDocTemplate doc={doc} examples={examples} />;
 }
 
-function SwitchDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
-  const [size, setSize] = useState<(typeof switchSizes)[number]>('md');
-  const [checked, setChecked] = useState(true);
-  const [disabled, setDisabled] = useState(false);
-
-  const codeSample = useMemo(
-    () =>
-      `<Switch size="${size}"${disabled ? ' disabled' : ''} checked={${checked}} onCheckedChange={setEnabled} />`,
-    [checked, disabled, size]
-  );
-
-  return (
-    <ComponentDocTemplate
-      doc={doc}
-      controls={
-        <Flex direction="column" gap="md">
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="switch-size">Size</Label>
-            <Select
-              id="switch-size"
-              value={size}
-              onChange={(event) =>
-                setSize(event.currentTarget.value as (typeof switchSizes)[number])
-              }
-            >
-              {switchSizes.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="switch-checked">Checked</Label>
-            <Switch id="switch-checked" checked={checked} onCheckedChange={setChecked} />
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="switch-disabled">Disabled</Label>
-            <Switch id="switch-disabled" checked={disabled} onCheckedChange={setDisabled} />
-          </Flex>
+function SwitchDoc({ doc }: { doc: ComponentDocRecord }) {
+  const examples: ComponentStoryExample[] = [
+    {
+      id: 'default-switch',
+      title: 'Labeled switch',
+      description: 'Pair switches with labels so state and intent are always clear.',
+      code: `import { Flex, Label, Switch } from 'yxgui';\n\n<Flex direction="row" align="center" gap="sm">\n  <Switch id="notifications" defaultChecked />\n  <Label htmlFor="notifications">Release notifications</Label>\n</Flex>`,
+      preview: (
+        <Flex direction="row" align="center" gap="sm">
+          <Switch id="notifications-story" defaultChecked />
+          <Label htmlFor="notifications-story">Release notifications</Label>
         </Flex>
-      }
-      preview={
-        <Flex direction="column" gap="sm">
-          <Flex direction="row" align="center" gap="sm">
-            <Switch
-              id="doc-switch"
-              size={size}
-              checked={checked}
-              disabled={disabled}
-              onCheckedChange={setChecked}
-            />
-            <Label htmlFor="doc-switch">Release notifications</Label>
-          </Flex>
-          <Typography as="small" variant="small">
-            Notifications are {checked ? 'enabled' : 'disabled'}.
-          </Typography>
+      )
+    },
+    {
+      id: 'disabled-switch',
+      title: 'Disabled switch',
+      description: 'Use disabled state when a setting cannot be changed in the current context.',
+      code: `import { Flex, Label, Switch } from 'yxgui';\n\n<Flex direction="row" align="center" gap="sm">\n  <Switch id="audit-mode" checked disabled />\n  <Label htmlFor="audit-mode">Audit mode</Label>\n</Flex>`,
+      preview: (
+        <Flex direction="row" align="center" gap="sm">
+          <Switch id="audit-mode-story" checked disabled />
+          <Label htmlFor="audit-mode-story">Audit mode</Label>
         </Flex>
-      }
-      codeSample={codeSample}
-    />
-  );
+      )
+    }
+  ];
+
+  return <ComponentDocTemplate doc={doc} examples={examples} />;
 }
 
-function TextareaDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
-  const [size, setSize] = useState<(typeof fieldSizes)[number]>('md');
-  const [invalid, setInvalid] = useState(false);
-  const [disabled, setDisabled] = useState(false);
-  const [rows, setRows] = useState<(typeof textareaRows)[number]>(4);
-  const [value, setValue] = useState('Investigated profile route regressions and prepared a fix.');
-
-  const codeSample = useMemo(() => {
-    const invalidLine = invalid ? ' invalid' : '';
-    const disabledLine = disabled ? ' disabled' : '';
-
-    return `<Label htmlFor="notes">Release notes</Label>
-<Textarea id="notes" size="${size}" rows={${rows}}${invalidLine}${disabledLine} />`;
-  }, [disabled, invalid, rows, size]);
-
-  return (
-    <ComponentDocTemplate
-      doc={doc}
-      controls={
-        <Flex direction="column" gap="md">
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="textarea-size">Size</Label>
-            <Select
-              id="textarea-size"
-              value={size}
-              onChange={(event) =>
-                setSize(event.currentTarget.value as (typeof fieldSizes)[number])
-              }
-            >
-              {fieldSizes.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="textarea-rows">Rows</Label>
-            <Select
-              id="textarea-rows"
-              value={String(rows)}
-              onChange={(event) =>
-                setRows(Number(event.currentTarget.value) as (typeof textareaRows)[number])
-              }
-            >
-              {textareaRows.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </Select>
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="textarea-invalid">Invalid</Label>
-            <Switch id="textarea-invalid" checked={invalid} onCheckedChange={setInvalid} />
-          </Flex>
-
-          <Flex direction="column" gap="xs">
-            <Label htmlFor="textarea-disabled">Disabled</Label>
-            <Switch id="textarea-disabled" checked={disabled} onCheckedChange={setDisabled} />
-          </Flex>
-        </Flex>
-      }
-      preview={
+function TextareaDoc({ doc }: { doc: ComponentDocRecord }) {
+  const examples: ComponentStoryExample[] = [
+    {
+      id: 'notes',
+      title: 'Notes field',
+      description: 'Use textarea for multi-line updates, descriptions, and comments.',
+      code: `import { Label, Textarea } from 'yxgui';\n\n<Label htmlFor="notes">Release notes</Label>\n<Textarea\n  id="notes"\n  rows={4}\n  defaultValue="Investigated profile route regressions and prepared a fix."\n/>`,
+      preview: (
         <Flex direction="column" gap="sm">
-          <Label htmlFor="doc-textarea">Release notes</Label>
+          <Label htmlFor="notes-story">Release notes</Label>
           <Textarea
-            id="doc-textarea"
-            size={size}
-            rows={rows}
-            value={value}
-            invalid={invalid ? true : undefined}
-            disabled={disabled}
-            onChange={(event) => setValue(event.currentTarget.value)}
+            id="notes-story"
+            rows={4}
+            defaultValue="Investigated profile route regressions and prepared a fix."
           />
-          <Typography as="small" variant="small">
-            Character count: {value.length}
-          </Typography>
-          {invalid ? (
-            <Alert variant="error">
-              <AlertTitle>Notes are required</AlertTitle>
-              <AlertDescription>Add context so reviewers can validate the change.</AlertDescription>
-            </Alert>
-          ) : null}
         </Flex>
-      }
-      codeSample={codeSample}
-    />
-  );
+      )
+    },
+    {
+      id: 'invalid-notes',
+      title: 'Required validation',
+      description: 'When notes are required, pair invalid style with direct error messaging.',
+      code: `import { Alert, AlertDescription, AlertTitle, Label, Textarea } from 'yxgui';\n\n<Label htmlFor="notes">Release notes</Label>\n<Textarea id="notes" rows={4} invalid />\n<Alert variant="error">\n  <AlertTitle>Notes are required</AlertTitle>\n  <AlertDescription>Add enough context for reviewers.</AlertDescription>\n</Alert>`,
+      preview: (
+        <Flex direction="column" gap="sm">
+          <Label htmlFor="invalid-notes-story">Release notes</Label>
+          <Textarea id="invalid-notes-story" rows={4} invalid />
+          <Alert variant="error">
+            <AlertTitle>Notes are required</AlertTitle>
+            <AlertDescription>Add enough context for reviewers.</AlertDescription>
+          </Alert>
+        </Flex>
+      )
+    }
+  ];
+
+  return <ComponentDocTemplate doc={doc} examples={examples} />;
 }

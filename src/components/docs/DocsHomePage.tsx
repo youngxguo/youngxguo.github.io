@@ -140,13 +140,21 @@ interface DocsHomePageProps {
   onNavigate: (path: string) => void;
 }
 
+export type ComponentPreviewVariant = 'default' | 'representative';
+
 const comboboxOptions = [
   { value: 'engineering', label: 'Engineering' },
   { value: 'design', label: 'Design' },
   { value: 'product', label: 'Product' }
 ] as const;
 
-function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
+export function ComponentPreview({
+  componentId,
+  variant = 'default'
+}: {
+  componentId: ComponentDocId;
+  variant?: ComponentPreviewVariant;
+}) {
   switch (componentId) {
     case 'button':
       return <Button size="sm">Ship release</Button>;
@@ -184,6 +192,25 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
     case 'textarea':
       return <Textarea rows={3} placeholder="Write your update..." />;
     case 'accordion':
+      if (variant === 'representative') {
+        return (
+          <Accordion type="single" collapsible defaultValue="account">
+            <AccordionItem value="account">
+              <AccordionTrigger size="sm" variant="ghost">
+                Account settings
+              </AccordionTrigger>
+              <AccordionContent>Profile, email, and account preferences.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="security">
+              <AccordionTrigger size="sm" variant="ghost">
+                Security
+              </AccordionTrigger>
+              <AccordionContent>Password and sign-in controls.</AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        );
+      }
+
       return (
         <Accordion type="single" collapsible defaultValue="item-1">
           <AccordionItem value="item-1">
@@ -209,6 +236,20 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
         </Breadcrumb>
       );
     case 'card':
+      if (variant === 'representative') {
+        return (
+          <Card variant="elevated">
+            <CardHeader>
+              <CardTitle>Release checklist</CardTitle>
+              <CardDescription>Ship quality updates with clear status.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Badge variant="success">Ready to deploy</Badge>
+            </CardContent>
+          </Card>
+        );
+      }
+
       return (
         <Card variant="elevated">
           <CardHeader>
@@ -227,6 +268,27 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
         </Collapsible>
       );
     case 'menubar':
+      if (variant === 'representative') {
+        return (
+          <Menubar>
+            <MenubarMenu>
+              <MenubarTrigger>File</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>New</MenubarItem>
+                <MenubarItem>Save</MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu>
+              <MenubarTrigger>Edit</MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>Undo</MenubarItem>
+                <MenubarItem>Redo</MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        );
+      }
+
       return (
         <Menubar>
           <MenubarMenu>
@@ -240,6 +302,32 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
         </Menubar>
       );
     case 'pagination':
+      if (variant === 'representative') {
+        return (
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>
+                  2
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        );
+      }
+
       return (
         <Pagination>
           <PaginationContent>
@@ -270,6 +358,21 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
         </Flex>
       );
     case 'tabs':
+      if (variant === 'representative') {
+        return (
+          <Tabs defaultValue="overview">
+            <TabsList>
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="activity">Activity</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+            </TabsList>
+            <TabsPanel value="overview">High-level status and summary metrics.</TabsPanel>
+            <TabsPanel value="activity">Recent events and team updates.</TabsPanel>
+            <TabsPanel value="settings">Configuration and access controls.</TabsPanel>
+          </Tabs>
+        );
+      }
+
       return (
         <Tabs defaultValue="account">
           <TabsList>
@@ -281,6 +384,32 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
         </Tabs>
       );
     case 'table':
+      if (variant === 'representative') {
+        return (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Owner</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>API docs</TableCell>
+                <TableCell>Platform</TableCell>
+                <TableCell>Ready</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Marketing site</TableCell>
+                <TableCell>Growth</TableCell>
+                <TableCell>In review</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        );
+      }
+
       return (
         <Table>
           <TableHeader>
@@ -406,6 +535,21 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
         </Drawer>
       );
     case 'dropdown-menu':
+      if (variant === 'representative') {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger size="sm" variant="secondary">
+              Team actions
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+              <DropdownMenuItem>Archive</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      }
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger size="sm" variant="secondary">
@@ -476,6 +620,16 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
         </Alert>
       );
     case 'badge':
+      if (variant === 'representative') {
+        return (
+          <Flex direction="row" gap="xs" wrap="wrap">
+            <Badge variant="success">Ready</Badge>
+            <Badge variant="neutral">Needs review</Badge>
+            <Badge variant="outline">Blocked</Badge>
+          </Flex>
+        );
+      }
+
       return (
         <Flex direction="row" gap="xs" wrap="wrap">
           <Badge variant="neutral">Neutral</Badge>
@@ -484,6 +638,17 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
         </Flex>
       );
     case 'progress':
+      if (variant === 'representative') {
+        return (
+          <Flex direction="column" gap="xs">
+            <Typography as="p" variant="small">
+              Uploading assets
+            </Typography>
+            <Progress value={82} />
+          </Flex>
+        );
+      }
+
       return <Progress value={64} />;
     case 'skeleton':
       return (
@@ -571,9 +736,9 @@ function ComponentPreview({ componentId }: { componentId: ComponentDocId }) {
       );
     default:
       return (
-        <Typography as="p" variant="small">
-          Component preview coming soon.
-        </Typography>
+        <Button size="sm" variant="secondary">
+          Example
+        </Button>
       );
   }
 }
