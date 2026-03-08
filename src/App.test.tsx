@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
 import { siteConfig } from './siteConfig';
 
@@ -48,5 +48,20 @@ describe('App', () => {
 
     expect(screen.getByRole('heading', { name: 'Accordion' })).toBeInTheDocument();
     expect(screen.getByText('Basic usage')).toBeInTheDocument();
+  });
+
+  it('filters docs navigation components with search input', () => {
+    window.history.pushState({}, '', '/docs');
+    render(<App />);
+
+    const searchInput = screen.getByRole('textbox', { name: 'Search components' });
+    fireEvent.change(searchInput, { target: { value: 'but' } });
+
+    expect(screen.getByRole('button', { name: 'Button' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Input' })).not.toBeInTheDocument();
+
+    fireEvent.change(searchInput, { target: { value: 'zzz' } });
+    expect(screen.getByText(/No components match:/)).toBeInTheDocument();
+    expect(screen.getByText('zzz')).toBeInTheDocument();
   });
 });

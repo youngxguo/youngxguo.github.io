@@ -10,7 +10,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Flex
+  Flex,
+  Input,
+  Typography
 } from 'yxgui';
 import { DocsIcon, GitHubIcon, HomeIcon } from '../icons';
 import { type ComponentDocId, docsCatalogGroups, docsComponents } from './docsData';
@@ -36,6 +38,25 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
     []
   );
   const [expandedSections, setExpandedSections] = useState<string[]>(getInitialExpandedSections);
+  const [searchQuery, setSearchQuery] = useState('');
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+
+  const filteredCatalogGroups = useMemo(() => {
+    return docsCatalogGroups
+      .map((group) => {
+        const components = group.components
+          .map((name) => docsByName.get(name))
+          .filter((component): component is (typeof docsComponents)[number] => Boolean(component))
+          .filter((component) => component.name.toLowerCase().includes(normalizedSearchQuery));
+
+        return {
+          title: group.title,
+          components
+        };
+      })
+      .filter((group) => group.components.length > 0);
+  }, [docsByName, normalizedSearchQuery]);
+
   const activeGroupTitle = useMemo(() => {
     const activeComponentName = docsComponents.find(
       (component) => component.id === activeComponentId
@@ -47,13 +68,18 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
 
     return docsCatalogGroups.find((group) => group.components.includes(activeComponentName))?.title;
   }, [activeComponentId]);
+
   const accordionValue = useMemo(() => {
+    if (normalizedSearchQuery.length > 0) {
+      return filteredCatalogGroups.map((group) => group.title);
+    }
+
     if (!activeGroupTitle) {
       return expandedSections;
     }
 
     return Array.from(new Set([...expandedSections, activeGroupTitle]));
-  }, [activeGroupTitle, expandedSections]);
+  }, [activeGroupTitle, expandedSections, filteredCatalogGroups, normalizedSearchQuery]);
 
   return (
     <section aria-label="yxgui docs" style={{ height: '100dvh', overflow: 'hidden' }}>
@@ -65,8 +91,19 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
         >
           <Card style={{ height: '100%', minHeight: 0, overflow: 'hidden' }}>
             <CardHeader>
-              <CardTitle>Navigation</CardTitle>
-              <CardDescription>Jump between component docs by section.</CardDescription>
+              <Flex direction="column" gap="md">
+                <Flex direction="column" gap="xs">
+                  <CardTitle>Navigation</CardTitle>
+                  <CardDescription>Jump between component docs by section.</CardDescription>
+                </Flex>
+                <Input
+                  size="sm"
+                  placeholder="Search components"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  aria-label="Search components"
+                />
+              </Flex>
             </CardHeader>
             <CardContent style={{ minHeight: 0, overflowY: 'auto' }}>
               <Flex direction="column" gap="md">
@@ -78,30 +115,20 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
                   Overview
                 </Button>
 
-                <Accordion
-                  type="multiple"
-                  value={accordionValue}
-                  onValueChange={setExpandedSections}
-                >
-                  {docsCatalogGroups.map((group) => {
-                    const groupComponents = group.components
-                      .map((name) => docsByName.get(name))
-                      .filter((component): component is (typeof docsComponents)[number] =>
-                        Boolean(component)
-                      );
-
-                    if (groupComponents.length === 0) {
-                      return null;
-                    }
-
-                    return (
+                {filteredCatalogGroups.length > 0 ? (
+                  <Accordion
+                    type="multiple"
+                    value={accordionValue}
+                    onValueChange={setExpandedSections}
+                  >
+                    {filteredCatalogGroups.map((group) => (
                       <AccordionItem key={group.title} value={group.title}>
                         <AccordionTrigger variant="ghost" size="sm">
                           {group.title}
                         </AccordionTrigger>
                         <AccordionContent>
                           <Flex direction="column" gap="xs">
-                            {groupComponents.map((component) => (
+                            {group.components.map((component) => (
                               <Button
                                 key={component.id}
                                 variant={activeComponentId === component.id ? 'primary' : 'ghost'}
@@ -114,9 +141,13 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
                           </Flex>
                         </AccordionContent>
                       </AccordionItem>
-                    );
-                  })}
-                </Accordion>
+                    ))}
+                  </Accordion>
+                ) : (
+                  <Typography as="p" variant="small">
+                    No components match: <code>{searchQuery.trim()}</code>.
+                  </Typography>
+                )}
               </Flex>
             </CardContent>
           </Card>
