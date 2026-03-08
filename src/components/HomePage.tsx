@@ -31,7 +31,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         gap="md"
         style={{ maxWidth: '50rem', margin: '0 auto', padding: '1rem 0.75rem 1.5rem' }}
       >
-        <Card>
+        <Card variant="elevated">
           <CardHeader>
             <Flex direction="row" align="center" gap="sm" wrap="wrap">
               <Avatar src={siteConfig.picture} alt={siteConfig.name} size="md" shape="circle" />

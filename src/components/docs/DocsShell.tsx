@@ -91,14 +91,14 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
               </Flex>
               <Flex direction="row" wrap="wrap" gap="xs">
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   aria-label="yxgui GitHub"
                   title="yxgui GitHub"
                   onClick={() => openExternal(YXGUI_GITHUB_URL)}
                 >
                   <GitHubIcon />
                 </Button>
-                <Button variant="ghost" onClick={() => onNavigate('/')}>
+                <Button variant="secondary" onClick={() => onNavigate('/')}>
                   Personal site
                 </Button>
                 <Button variant="secondary" onClick={() => onNavigate('/docs')}>
@@ -110,80 +110,84 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
         </Card>
 
         <Flex direction="row" gap="lg" align="start" wrap="wrap">
-          <Card
+          <Flex
             style={{
               flex: '0 0 clamp(18rem, 28vw, 20rem)',
               minWidth: '18rem',
               maxHeight: 'calc(100dvh - 2rem)',
               position: 'sticky',
-              top: '1rem',
-              overflow: 'hidden',
-              boxSizing: 'border-box'
+              top: '1rem'
             }}
           >
-            <CardHeader>
-              <CardTitle>Navigation</CardTitle>
-              <CardDescription>Jump between component docs by section.</CardDescription>
-            </CardHeader>
-            <CardFooter
-              style={{
-                boxSizing: 'border-box',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                display: 'block'
-              }}
-            >
-              <Flex direction="column" gap="md" style={{ width: '100%', minWidth: 0 }}>
-                <Button
-                  variant={!activeComponentId ? 'primary' : 'secondary'}
-                  size="sm"
-                  onClick={() => onNavigate('/docs')}
+            <Card>
+              <CardHeader>
+                <CardTitle>Navigation</CardTitle>
+                <CardDescription>Jump between component docs by section.</CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <div
+                  style={{
+                    boxSizing: 'border-box',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                    width: '100%'
+                  }}
                 >
-                  Overview
-                </Button>
+                  <Flex direction="column" gap="md" style={{ width: '100%', minWidth: 0 }}>
+                    <Button
+                      variant={!activeComponentId ? 'primary' : 'secondary'}
+                      size="sm"
+                      onClick={() => onNavigate('/docs')}
+                    >
+                      Overview
+                    </Button>
 
-                <Accordion
-                  type="multiple"
-                  value={accordionValue}
-                  onValueChange={setExpandedSections}
-                >
-                  {docsCatalogGroups.map((group) => {
-                    const groupComponents = group.components
-                      .map((name) => docsByName.get(name))
-                      .filter((component): component is (typeof docsComponents)[number] =>
-                        Boolean(component)
-                      );
+                    <Accordion
+                      type="multiple"
+                      value={accordionValue}
+                      onValueChange={setExpandedSections}
+                    >
+                      {docsCatalogGroups.map((group) => {
+                        const groupComponents = group.components
+                          .map((name) => docsByName.get(name))
+                          .filter((component): component is (typeof docsComponents)[number] =>
+                            Boolean(component)
+                          );
 
-                    if (groupComponents.length === 0) {
-                      return null;
-                    }
+                        if (groupComponents.length === 0) {
+                          return null;
+                        }
 
-                    return (
-                      <AccordionItem key={group.title} value={group.title}>
-                        <AccordionTrigger variant="ghost" size="sm">
-                          {group.title}
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <Flex direction="column" gap="xs">
-                            {groupComponents.map((component) => (
-                              <Button
-                                key={component.id}
-                                variant={activeComponentId === component.id ? 'primary' : 'ghost'}
-                                size="sm"
-                                onClick={() => onNavigate(`/docs/components/${component.id}`)}
-                              >
-                                {component.name}
-                              </Button>
-                            ))}
-                          </Flex>
-                        </AccordionContent>
-                      </AccordionItem>
-                    );
-                  })}
-                </Accordion>
-              </Flex>
-            </CardFooter>
-          </Card>
+                        return (
+                          <AccordionItem key={group.title} value={group.title}>
+                            <AccordionTrigger variant="ghost" size="sm">
+                              {group.title}
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <Flex direction="column" gap="xs">
+                                {groupComponents.map((component) => (
+                                  <Button
+                                    key={component.id}
+                                    variant={
+                                      activeComponentId === component.id ? 'primary' : 'ghost'
+                                    }
+                                    size="sm"
+                                    onClick={() => onNavigate(`/docs/components/${component.id}`)}
+                                  >
+                                    {component.name}
+                                  </Button>
+                                ))}
+                              </Flex>
+                            </AccordionContent>
+                          </AccordionItem>
+                        );
+                      })}
+                    </Accordion>
+                  </Flex>
+                </div>
+              </CardFooter>
+            </Card>
+          </Flex>
 
           <Flex direction="column" gap="lg" style={{ flex: '1 1 34rem', minWidth: '18rem' }}>
             {children}

@@ -27,7 +27,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
 
   return (
     <Flex direction="column" gap="lg">
-      <Card>
+      <Card variant="elevated">
         <CardHeader>
           <Badge variant="outline">Public docs • yxgui {docsContext.packageVersion}</Badge>
           <CardTitle>yxgui docs on the main site</CardTitle>
@@ -43,7 +43,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card variant="outlined">
         <CardHeader>
           <CardTitle>Coverage snapshot</CardTitle>
           <CardDescription>
@@ -53,29 +53,35 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         </CardHeader>
         <CardContent>
           <Flex direction="row" gap="md" wrap="wrap" align="stretch">
-            <Card style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
-              <CardHeader>
-                <CardTitle>{docsComponents.length}</CardTitle>
-                <CardDescription>Component pages with docs coverage</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
-              <CardHeader>
-                <CardTitle>{docsContext.exportedFamiliesCount}</CardTitle>
-                <CardDescription>Exported component families in yxgui</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
-              <CardHeader>
-                <CardTitle>{coveragePercent}%</CardTitle>
-                <CardDescription>Current deep-doc coverage by family</CardDescription>
-              </CardHeader>
-            </Card>
+            <Flex style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+              <Card variant="elevated">
+                <CardHeader>
+                  <CardTitle>{docsComponents.length}</CardTitle>
+                  <CardDescription>Component pages with docs coverage</CardDescription>
+                </CardHeader>
+              </Card>
+            </Flex>
+            <Flex style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+              <Card variant="elevated">
+                <CardHeader>
+                  <CardTitle>{docsContext.exportedFamiliesCount}</CardTitle>
+                  <CardDescription>Exported component families in yxgui</CardDescription>
+                </CardHeader>
+              </Card>
+            </Flex>
+            <Flex style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+              <Card variant="elevated">
+                <CardHeader>
+                  <CardTitle>{coveragePercent}%</CardTitle>
+                  <CardDescription>Current deep-doc coverage by family</CardDescription>
+                </CardHeader>
+              </Card>
+            </Flex>
           </Flex>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card variant="outlined">
         <CardHeader>
           <CardTitle>Documentation principles</CardTitle>
         </CardHeader>
@@ -108,7 +114,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card variant="outlined">
         <CardHeader>
           <CardTitle>API conventions in yxgui</CardTitle>
           <CardDescription>
@@ -119,23 +125,25 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         <CardContent>
           <Flex direction="row" gap="md" wrap="wrap" align="stretch">
             {docsConventions.map((convention) => (
-              <Card key={convention.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
-                <CardHeader>
-                  <CardTitle>{convention.title}</CardTitle>
-                  <CardDescription>{convention.detail}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Typography as="p" variant="small">
-                    {convention.example}
-                  </Typography>
-                </CardContent>
-              </Card>
+              <Flex key={convention.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+                <Card variant="elevated">
+                  <CardHeader>
+                    <CardTitle>{convention.title}</CardTitle>
+                    <CardDescription>{convention.detail}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Typography as="p" variant="small">
+                      {convention.example}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Flex>
             ))}
           </Flex>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card variant="outlined">
         <CardHeader>
           <CardTitle>Catalog map</CardTitle>
           <CardDescription>
@@ -145,21 +153,23 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         <CardContent>
           <Flex direction="row" gap="md" wrap="wrap" align="stretch">
             {docsCatalogGroups.map((group) => (
-              <Card key={group.title} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
-                <CardHeader>
-                  <CardTitle>{group.title}</CardTitle>
-                  <CardDescription>{group.summary}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Flex direction="row" gap="xs" wrap="wrap">
-                    {group.components.map((componentName) => (
-                      <Badge key={`${group.title}-${componentName}`} variant="neutral">
-                        {componentName}
-                      </Badge>
-                    ))}
-                  </Flex>
-                </CardContent>
-              </Card>
+              <Flex key={group.title} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+                <Card variant="elevated">
+                  <CardHeader>
+                    <CardTitle>{group.title}</CardTitle>
+                    <CardDescription>{group.summary}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Flex direction="row" gap="xs" wrap="wrap">
+                      {group.components.map((componentName) => (
+                        <Badge key={`${group.title}-${componentName}`} variant="neutral">
+                          {componentName}
+                        </Badge>
+                      ))}
+                    </Flex>
+                  </CardContent>
+                </Card>
+              </Flex>
             ))}
           </Flex>
         </CardContent>
@@ -167,18 +177,20 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
 
       <Flex direction="row" gap="md" wrap="wrap" align="stretch">
         {docsComponents.map((component) => (
-          <Card key={component.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
-            <CardHeader>
-              <Badge variant="neutral">{component.status}</Badge>
-              <CardTitle>{component.name}</CardTitle>
-              <CardDescription>{component.summary}</CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Button onClick={() => onNavigate(`/docs/components/${component.id}`)}>
-                Open component docs
-              </Button>
-            </CardFooter>
-          </Card>
+          <Flex key={component.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+            <Card variant="elevated">
+              <CardHeader>
+                <Badge variant="neutral">{component.status}</Badge>
+                <CardTitle>{component.name}</CardTitle>
+                <CardDescription>{component.summary}</CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <Button onClick={() => onNavigate(`/docs/components/${component.id}`)}>
+                  Open component docs
+                </Button>
+              </CardFooter>
+            </Card>
+          </Flex>
         ))}
       </Flex>
     </Flex>

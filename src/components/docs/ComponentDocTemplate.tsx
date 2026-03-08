@@ -56,120 +56,121 @@ export function ComponentDocTemplate({
           <CardDescription>Tweak the controls and verify behavior in context.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Flex direction="row" align="start" wrap="wrap" gap="md">
-            <Card>
-              <CardHeader>
-                <CardTitle>Controls</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Flex direction="column" gap="md">
-                  {controls}
-                </Flex>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Preview</CardTitle>
-              </CardHeader>
-              <CardContent>{preview}</CardContent>
-            </Card>
+          <Flex direction="row" align="start" wrap="wrap" gap="lg">
+            <Flex direction="column" gap="md" style={{ flex: '0 0 16rem', minWidth: '15rem' }}>
+              {controls}
+            </Flex>
+            <Flex direction="column" gap="sm" style={{ flex: '1 1 22rem', minWidth: '18rem' }}>
+              {preview}
+            </Flex>
           </Flex>
         </CardContent>
       </Card>
 
-      <Flex direction="column" gap="md">
-        <Card>
-          <CardHeader>
-            <CardTitle>When to use</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Flex direction="column" gap="xs">
-              {doc.whenToUse.map((item) => (
-                <Typography key={item} as="p">
-                  • {item}
-                </Typography>
-              ))}
-            </Flex>
-          </CardContent>
-        </Card>
+      <Flex direction="row" gap="md" wrap="wrap" align="stretch">
+        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+          <Card>
+            <CardHeader>
+              <CardTitle>When to use</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Flex direction="column" gap="xs">
+                {doc.whenToUse.map((item) => (
+                  <Typography key={item} as="p">
+                    • {item}
+                  </Typography>
+                ))}
+              </Flex>
+            </CardContent>
+          </Card>
+        </Flex>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>When not to use</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Flex direction="column" gap="xs">
-              {doc.whenNotToUse.map((item) => (
-                <Typography key={item} as="p">
-                  • {item}
-                </Typography>
-              ))}
-            </Flex>
-          </CardContent>
-        </Card>
+        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+          <Card>
+            <CardHeader>
+              <CardTitle>When not to use</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Flex direction="column" gap="xs">
+                {doc.whenNotToUse.map((item) => (
+                  <Typography key={item} as="p">
+                    • {item}
+                  </Typography>
+                ))}
+              </Flex>
+            </CardContent>
+          </Card>
+        </Flex>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Accessibility notes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Flex direction="column" gap="xs">
-              {doc.accessibility.map((item) => (
-                <Typography key={item} as="p">
-                  • {item}
-                </Typography>
-              ))}
-            </Flex>
-          </CardContent>
-        </Card>
+        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Accessibility notes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Flex direction="column" gap="xs">
+                {doc.accessibility.map((item) => (
+                  <Typography key={item} as="p">
+                    • {item}
+                  </Typography>
+                ))}
+              </Flex>
+            </CardContent>
+          </Card>
+        </Flex>
       </Flex>
 
       <Flex direction="row" gap="md" wrap="wrap" align="stretch">
-        <Card style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
-          <CardHeader>
-            <CardTitle>Composition patterns</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Flex direction="column" gap="xs">
-              {doc.compositionPatterns.map((item) => (
-                <Typography key={item} as="p">
-                  • {item}
-                </Typography>
-              ))}
-            </Flex>
-          </CardContent>
-        </Card>
+        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Composition patterns</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Flex direction="column" gap="xs">
+                {doc.compositionPatterns.map((item) => (
+                  <Typography key={item} as="p">
+                    • {item}
+                  </Typography>
+                ))}
+              </Flex>
+            </CardContent>
+          </Card>
+        </Flex>
 
-        <Card style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
-          <CardHeader>
-            <CardTitle>Implementation checklist</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Flex direction="column" gap="xs">
-              {doc.implementationChecklist.map((item) => (
-                <Typography key={item} as="p">
-                  • {item}
-                </Typography>
-              ))}
-            </Flex>
-          </CardContent>
-        </Card>
+        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Implementation checklist</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Flex direction="column" gap="xs">
+                {doc.implementationChecklist.map((item) => (
+                  <Typography key={item} as="p">
+                    • {item}
+                  </Typography>
+                ))}
+              </Flex>
+            </CardContent>
+          </Card>
+        </Flex>
 
-        <Card style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
-          <CardHeader>
-            <CardTitle>Common pitfalls</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Flex direction="column" gap="xs">
-              {doc.commonPitfalls.map((item) => (
-                <Typography key={item} as="p">
-                  • {item}
-                </Typography>
-              ))}
-            </Flex>
-          </CardContent>
-        </Card>
+        <Flex style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Common pitfalls</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Flex direction="column" gap="xs">
+                {doc.commonPitfalls.map((item) => (
+                  <Typography key={item} as="p">
+                    • {item}
+                  </Typography>
+                ))}
+              </Flex>
+            </CardContent>
+          </Card>
+        </Flex>
       </Flex>
 
       <Card>

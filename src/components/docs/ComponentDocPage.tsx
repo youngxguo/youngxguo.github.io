@@ -291,7 +291,7 @@ function DialogDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> })
     </DialogDescription>
     <Input placeholder="name@company.com" />
     <DialogFooter>
-      <DialogClose variant="ghost">Cancel</DialogClose>
+      <DialogClose variant="secondary">Cancel</DialogClose>
       <Button>Send invite</Button>
     </DialogFooter>
   </DialogContent>
@@ -338,7 +338,7 @@ function DialogDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> })
               onChange={(event) => setInviteEmail(event.currentTarget.value)}
             />
             <DialogFooter>
-              <DialogClose variant="ghost">Cancel</DialogClose>
+              <DialogClose variant="secondary">Cancel</DialogClose>
               <Button disabled={!inviteEmail.trim()} onClick={() => setOpen(false)}>
                 Send invite
               </Button>

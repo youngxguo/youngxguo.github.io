@@ -80,7 +80,7 @@ export interface DocsCatalogGroup {
 }
 
 export const docsContext = {
-  packageVersion: '0.0.4',
+  packageVersion: '0.0.6',
   exportedFamiliesCount: 43,
   docsLastUpdated: 'March 8, 2026'
 } as const;
