@@ -12,10 +12,22 @@ describe('App', () => {
     render(<App />);
 
     expect(screen.getByRole('heading', { name: siteConfig.name })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'GitHub' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'LinkedIn' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Email' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'yxgui' })).toBeInTheDocument();
+
+    const githubButton = screen.getByRole('button', { name: 'GitHub' });
+    expect(githubButton).toBeInTheDocument();
+    expect(githubButton.querySelector('svg')).not.toBeNull();
+
+    const linkedInButton = screen.getByRole('button', { name: 'LinkedIn' });
+    expect(linkedInButton).toBeInTheDocument();
+    expect(linkedInButton.querySelector('svg')).not.toBeNull();
+
+    const emailButton = screen.getByRole('button', { name: 'Email' });
+    expect(emailButton).toBeInTheDocument();
+    expect(emailButton.querySelector('svg')).not.toBeNull();
+
+    const docsButton = screen.getByRole('button', { name: 'yxgui' });
+    expect(docsButton).toBeInTheDocument();
+    expect(docsButton.querySelector('svg')).not.toBeNull();
   });
 
   it('renders component docs route', () => {

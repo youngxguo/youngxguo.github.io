@@ -9,6 +9,7 @@ import {
   Flex,
   Typography
 } from 'yxgui';
+import { DocsIcon, EmailIcon, GitHubIcon, LinkedInIcon } from './icons';
 import { siteConfig } from '../siteConfig';
 
 interface HomePageProps {
@@ -48,6 +49,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 variant="secondary"
                 onClick={() => openExternal(siteConfig.links.github)}
               >
+                <GitHubIcon />
                 GitHub
               </Button>
               <Button
@@ -55,6 +57,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 variant="secondary"
                 onClick={() => openExternal(siteConfig.links.linkedin)}
               >
+                <LinkedInIcon />
                 LinkedIn
               </Button>
               <Button
@@ -62,9 +65,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 variant="secondary"
                 onClick={() => openMailto(siteConfig.links.email)}
               >
+                <EmailIcon />
                 Email
               </Button>
               <Button size="sm" variant="secondary" onClick={() => onNavigate('/docs')}>
+                <DocsIcon />
                 yxgui
               </Button>
             </Flex>
