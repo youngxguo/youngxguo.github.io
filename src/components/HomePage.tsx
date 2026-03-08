@@ -6,8 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Flex,
-  Typography
+  Flex
 } from 'yxgui';
 import { DocsIcon, EmailIcon, GitHubIcon, LinkedInIcon } from './icons';
 import { siteConfig } from '../siteConfig';
@@ -73,9 +72,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
             </CardFooter>
           </Card>
         </Flex>
-        <Typography as="p" variant="small">
-          {siteConfig.name} © {new Date().getFullYear()}
-        </Typography>
       </Flex>
     </section>
   );
