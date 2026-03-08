@@ -27,50 +27,52 @@ function openMailto(url: string) {
 export function HomePage({ onNavigate }: HomePageProps) {
   return (
     <section aria-label="home page">
-      <Flex direction="column" gap="md">
-        <Card variant="elevated">
-          <CardHeader>
-            <Flex direction="row" align="center" gap="sm" wrap="wrap">
-              <Avatar src={siteConfig.picture} alt={siteConfig.name} size="md" shape="circle" />
-              <Flex direction="column" gap="xs" flex="1 1 16rem">
-                <CardTitle>{siteConfig.name}</CardTitle>
-                <CardDescription>{siteConfig.bio}</CardDescription>
+      <Flex direction="column" gap="md" align="center">
+        <Flex shrink={0} grow={0}>
+          <Card variant="elevated">
+            <CardHeader>
+              <Flex direction="row" align="center" gap="sm" wrap="wrap">
+                <Avatar src={siteConfig.picture} alt={siteConfig.name} size="md" shape="circle" />
+                <Flex direction="column" gap="xs" grow={1}>
+                  <CardTitle>{siteConfig.name}</CardTitle>
+                  <CardDescription>{siteConfig.bio}</CardDescription>
+                </Flex>
               </Flex>
-            </Flex>
-          </CardHeader>
-          <CardFooter>
-            <Flex direction="row" gap="xs" wrap="wrap">
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => openExternal(siteConfig.links.github)}
-              >
-                <GitHubIcon />
-                GitHub
-              </Button>
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => openExternal(siteConfig.links.linkedin)}
-              >
-                <LinkedInIcon />
-                LinkedIn
-              </Button>
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => openMailto(siteConfig.links.email)}
-              >
-                <EmailIcon />
-                Email
-              </Button>
-              <Button size="sm" variant="secondary" onClick={() => onNavigate('/docs')}>
-                <DocsIcon />
-                yxgui
-              </Button>
-            </Flex>
-          </CardFooter>
-        </Card>
+            </CardHeader>
+            <CardFooter>
+              <Flex direction="row" gap="xs" wrap="wrap">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => openExternal(siteConfig.links.github)}
+                >
+                  <GitHubIcon />
+                  GitHub
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => openExternal(siteConfig.links.linkedin)}
+                >
+                  <LinkedInIcon />
+                  LinkedIn
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => openMailto(siteConfig.links.email)}
+                >
+                  <EmailIcon />
+                  Email
+                </Button>
+                <Button size="sm" variant="secondary" onClick={() => onNavigate('/docs')}>
+                  <DocsIcon />
+                  Docs
+                </Button>
+              </Flex>
+            </CardFooter>
+          </Card>
+        </Flex>
         <Typography as="p" variant="small">
           {siteConfig.name} © {new Date().getFullYear()}
         </Typography>

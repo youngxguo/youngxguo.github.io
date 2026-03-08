@@ -4,18 +4,16 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-  Badge,
   Button,
   Card,
+  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-  Flex,
-  Typography
+  Flex
 } from 'yxgui';
-import { GitHubIcon } from '../icons';
-import { type ComponentDocId, docsCatalogGroups, docsComponents, docsContext } from './docsData';
+import { DocsIcon, GitHubIcon, HomeIcon } from '../icons';
+import { type ComponentDocId, docsCatalogGroups, docsComponents } from './docsData';
 
 interface DocsShellProps {
   activeComponentId?: ComponentDocId;
@@ -58,44 +56,48 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
   }, [activeGroupTitle, expandedSections]);
 
   return (
-    <section aria-label="yxgui docs">
-      <Flex direction="column" gap="lg">
+    <section aria-label="yxgui docs" style={{ height: '100dvh' }}>
+      <Flex direction="column" gap="lg" style={{ height: '100%', minHeight: 0 }}>
         <Card>
           <CardHeader>
             <Flex direction="row" align="center" justify="between" wrap="wrap" gap="sm">
-              <Flex direction="column" gap="xs" flex="1 1 22rem">
-                <Badge variant="success">yxgui</Badge>
+              <Flex direction="column" gap="xs" grow={1}>
                 <CardTitle>Component docs</CardTitle>
                 <CardDescription>Public docs + live playgrounds for the library.</CardDescription>
               </Flex>
               <Flex direction="row" wrap="wrap" gap="xs">
-                <Button
-                  variant="secondary"
-                  aria-label="yxgui GitHub"
-                  title="yxgui GitHub"
-                  onClick={() => openExternal(YXGUI_GITHUB_URL)}
-                >
+                <Button variant="secondary" onClick={() => openExternal(YXGUI_GITHUB_URL)}>
                   <GitHubIcon />
+                  GitHub
                 </Button>
                 <Button variant="secondary" onClick={() => onNavigate('/')}>
-                  Personal site
+                  <HomeIcon />
+                  Home
                 </Button>
                 <Button variant="secondary" onClick={() => onNavigate('/docs')}>
-                  Docs home
+                  <DocsIcon />
+                  Docs
                 </Button>
               </Flex>
             </Flex>
           </CardHeader>
         </Card>
 
-        <Flex direction="row" gap="lg" align="start" wrap="wrap">
-          <Flex flex="0 0 20rem">
-            <Card>
+        <Flex
+          direction="row"
+          gap="lg"
+          align="start"
+          wrap="nowrap"
+          grow={1}
+          style={{ minHeight: 0 }}
+        >
+          <Flex as="aside" flex={1} style={{ minHeight: 0 }}>
+            <Card style={{ height: '100%', overflow: 'hidden' }}>
               <CardHeader>
                 <CardTitle>Navigation</CardTitle>
                 <CardDescription>Jump between component docs by section.</CardDescription>
               </CardHeader>
-              <CardFooter>
+              <CardContent style={{ overflowY: 'auto' }}>
                 <Flex direction="column" gap="md">
                   <Button
                     variant={!activeComponentId ? 'primary' : 'secondary'}
@@ -145,19 +147,20 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
                     })}
                   </Accordion>
                 </Flex>
-              </CardFooter>
+              </CardContent>
             </Card>
           </Flex>
 
-          <Flex direction="column" gap="lg" flex="1 1 34rem">
+          <Flex
+            as="section"
+            direction="column"
+            gap="lg"
+            flex={3}
+            style={{ minHeight: 0, overflowY: 'auto' }}
+          >
             {children}
           </Flex>
         </Flex>
-
-        <Typography as="p" variant="small">
-          This docs shell is part of the production site and is synchronized with yxgui{' '}
-          {docsContext.packageVersion}.
-        </Typography>
       </Flex>
     </section>
   );

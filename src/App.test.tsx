@@ -25,7 +25,7 @@ describe('App', () => {
     expect(emailButton).toBeInTheDocument();
     expect(emailButton.querySelector('svg')).not.toBeNull();
 
-    const docsButton = screen.getByRole('button', { name: 'yxgui' });
+    const docsButton = screen.getByRole('button', { name: 'Docs' });
     expect(docsButton).toBeInTheDocument();
     expect(docsButton.querySelector('svg')).not.toBeNull();
   });
@@ -36,7 +36,9 @@ describe('App', () => {
 
     expect(screen.getByText('Component docs')).toBeInTheDocument();
     expect(screen.getByText('Live playground')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'yxgui GitHub' })).toBeInTheDocument();
+    const githubButton = screen.getByRole('button', { name: 'GitHub' });
+    expect(githubButton).toBeInTheDocument();
+    expect(githubButton.querySelector('svg')).not.toBeNull();
     expect(screen.getByRole('heading', { name: 'Button' })).toBeInTheDocument();
   });
 
