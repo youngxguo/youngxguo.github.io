@@ -14,24 +14,65 @@ import {
   TabsTrigger,
   Typography
 } from 'yxgui';
-import { docsComponents } from './docsData';
+import { docsCatalogGroups, docsComponents, docsContext, docsConventions } from './docsData';
 
 interface DocsHomePageProps {
   onNavigate: (path: string) => void;
 }
 
 export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
+  const coveragePercent = Math.round(
+    (docsComponents.length / docsContext.exportedFamiliesCount) * 100
+  );
+
   return (
     <Flex direction="column" gap="lg">
       <Card>
         <CardHeader>
-          <Badge variant="outline">Public docs</Badge>
+          <Badge variant="outline">Public docs • yxgui {docsContext.packageVersion}</Badge>
           <CardTitle>yxgui docs on the main site</CardTitle>
           <CardDescription>
             This doubles as product documentation and a real integration target for the component
             library.
           </CardDescription>
         </CardHeader>
+        <CardContent>
+          <Typography as="p" variant="small">
+            Last synchronized: {docsContext.docsLastUpdated}
+          </Typography>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Coverage snapshot</CardTitle>
+          <CardDescription>
+            Deep docs exist for core primitives. The remaining exported families are grouped below
+            for incremental rollout.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Flex direction="row" gap="md" wrap="wrap" align="stretch">
+            <Card style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+              <CardHeader>
+                <CardTitle>{docsComponents.length}</CardTitle>
+                <CardDescription>Component pages with docs coverage</CardDescription>
+              </CardHeader>
+            </Card>
+            <Card style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+              <CardHeader>
+                <CardTitle>{docsContext.exportedFamiliesCount}</CardTitle>
+                <CardDescription>Exported component families in yxgui</CardDescription>
+              </CardHeader>
+            </Card>
+            <Card style={{ flex: '1 1 12rem', minWidth: '11rem' }}>
+              <CardHeader>
+                <CardTitle>{coveragePercent}%</CardTitle>
+                <CardDescription>Current deep-doc coverage by family</CardDescription>
+              </CardHeader>
+            </Card>
+          </Flex>
+        </CardContent>
       </Card>
 
       <Card>
@@ -67,9 +108,66 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
         </CardContent>
       </Card>
 
-      <Flex direction="column" gap="md">
+      <Card>
+        <CardHeader>
+          <CardTitle>API conventions in yxgui</CardTitle>
+          <CardDescription>
+            These patterns are stable across the library and guide how docs examples should be
+            authored.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Flex direction="row" gap="md" wrap="wrap" align="stretch">
+            {docsConventions.map((convention) => (
+              <Card key={convention.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+                <CardHeader>
+                  <CardTitle>{convention.title}</CardTitle>
+                  <CardDescription>{convention.detail}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Typography as="p" variant="small">
+                    {convention.example}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Flex>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Catalog map</CardTitle>
+          <CardDescription>
+            High-level grouping of exported families in yxgui {docsContext.packageVersion}.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Flex direction="row" gap="md" wrap="wrap" align="stretch">
+            {docsCatalogGroups.map((group) => (
+              <Card key={group.title} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
+                <CardHeader>
+                  <CardTitle>{group.title}</CardTitle>
+                  <CardDescription>{group.summary}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Flex direction="row" gap="xs" wrap="wrap">
+                    {group.components.map((componentName) => (
+                      <Badge key={`${group.title}-${componentName}`} variant="neutral">
+                        {componentName}
+                      </Badge>
+                    ))}
+                  </Flex>
+                </CardContent>
+              </Card>
+            ))}
+          </Flex>
+        </CardContent>
+      </Card>
+
+      <Flex direction="row" gap="md" wrap="wrap" align="stretch">
         {docsComponents.map((component) => (
-          <Card key={component.id}>
+          <Card key={component.id} style={{ flex: '1 1 16rem', minWidth: '15rem' }}>
             <CardHeader>
               <Badge variant="neutral">{component.status}</Badge>
               <CardTitle>{component.name}</CardTitle>

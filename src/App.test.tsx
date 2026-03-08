@@ -15,7 +15,7 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: 'GitHub' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'LinkedIn' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Email' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'yxgui docs' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'yxgui' })).toBeInTheDocument();
   });
 
   it('renders component docs route', () => {
@@ -24,6 +24,15 @@ describe('App', () => {
 
     expect(screen.getByText('Component docs')).toBeInTheDocument();
     expect(screen.getByText('Live playground')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'yxgui GitHub' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Button' })).toBeInTheDocument();
+  });
+
+  it('renders newly added component docs pages', () => {
+    window.history.pushState({}, '', '/docs/components/accordion');
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'Accordion' })).toBeInTheDocument();
+    expect(screen.getByText('Reference page')).toBeInTheDocument();
   });
 });

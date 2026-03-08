@@ -16,6 +16,7 @@ import {
   Label,
   Select,
   Switch,
+  Textarea,
   Typography
 } from 'yxgui';
 import { ComponentDocTemplate } from './ComponentDocTemplate';
@@ -28,6 +29,8 @@ interface ComponentDocPageProps {
 const buttonVariants = ['primary', 'secondary', 'ghost'] as const;
 const buttonSizes = ['sm', 'md', 'lg'] as const;
 const fieldSizes = ['sm', 'md', 'lg'] as const;
+const switchSizes = ['sm', 'md'] as const;
+const textareaRows = [3, 4, 6] as const;
 
 export function ComponentDocPage({ componentId }: ComponentDocPageProps) {
   const doc = getDocById(componentId);
@@ -44,7 +47,67 @@ export function ComponentDocPage({ componentId }: ComponentDocPageProps) {
     return <InputDoc doc={doc} />;
   }
 
-  return <DialogDoc doc={doc} />;
+  if (componentId === 'dialog') {
+    return <DialogDoc doc={doc} />;
+  }
+
+  if (componentId === 'select') {
+    return <SelectDoc doc={doc} />;
+  }
+
+  if (componentId === 'switch') {
+    return <SwitchDoc doc={doc} />;
+  }
+
+  if (componentId === 'textarea') {
+    return <TextareaDoc doc={doc} />;
+  }
+
+  return <ReferenceDoc doc={doc} />;
+}
+
+function ReferenceDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
+  const codeSample = useMemo(() => {
+    const propLines = doc.props
+      .slice(0, 3)
+      .map((prop) => `  ${prop.name}={/* ${prop.type} */}`)
+      .join('\n');
+
+    return `import { ${doc.name} } from 'yxgui';
+
+<${doc.name}
+${propLines}
+>
+  {/* Compose ${doc.name} in your product surface */}
+</${doc.name}>`;
+  }, [doc]);
+
+  return (
+    <ComponentDocTemplate
+      doc={doc}
+      controls={
+        <Flex direction="column" gap="xs">
+          <Typography as="p" variant="small">
+            Reference page
+          </Typography>
+          <Typography as="p">
+            Deep playground controls for this component are still being expanded.
+          </Typography>
+        </Flex>
+      }
+      preview={
+        <Flex direction="column" gap="sm">
+          <Typography as="p">
+            Use the API snapshot below as the source of truth for initial integration.
+          </Typography>
+          <Typography as="p" variant="small">
+            Tip: start with production usage notes and wire the minimal props first.
+          </Typography>
+        </Flex>
+      }
+      codeSample={codeSample}
+    />
+  );
 }
 
 function ButtonDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
@@ -282,6 +345,262 @@ function DialogDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> })
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      }
+      codeSample={codeSample}
+    />
+  );
+}
+
+function SelectDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
+  const [size, setSize] = useState<(typeof fieldSizes)[number]>('md');
+  const [invalid, setInvalid] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [value, setValue] = useState('engineering');
+
+  const codeSample = useMemo(() => {
+    const invalidLine = invalid ? ' invalid' : '';
+    const disabledLine = disabled ? ' disabled' : '';
+
+    return `<Label htmlFor="team">Team</Label>
+<Select id="team" size="${size}"${invalidLine}${disabledLine}>
+  <option value="">Select a team</option>
+  <option value="engineering">Engineering</option>
+  <option value="design">Design</option>
+  <option value="product">Product</option>
+</Select>`;
+  }, [disabled, invalid, size]);
+
+  return (
+    <ComponentDocTemplate
+      doc={doc}
+      controls={
+        <Flex direction="column" gap="md">
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="select-size">Size</Label>
+            <Select
+              id="select-size"
+              value={size}
+              onChange={(event) =>
+                setSize(event.currentTarget.value as (typeof fieldSizes)[number])
+              }
+            >
+              {fieldSizes.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="select-invalid">Invalid</Label>
+            <Switch id="select-invalid" checked={invalid} onCheckedChange={setInvalid} />
+          </Flex>
+
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="select-disabled">Disabled</Label>
+            <Switch id="select-disabled" checked={disabled} onCheckedChange={setDisabled} />
+          </Flex>
+
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="select-value">Selected value</Label>
+            <Select
+              id="select-value"
+              value={value}
+              onChange={(event) => setValue(event.currentTarget.value)}
+            >
+              <option value="engineering">Engineering</option>
+              <option value="design">Design</option>
+              <option value="product">Product</option>
+            </Select>
+          </Flex>
+        </Flex>
+      }
+      preview={
+        <Flex direction="column" gap="sm">
+          <Label htmlFor="doc-select">Team</Label>
+          <Select
+            id="doc-select"
+            size={size}
+            invalid={invalid ? true : undefined}
+            disabled={disabled}
+            value={value}
+            onChange={(event) => setValue(event.currentTarget.value)}
+          >
+            <option value="">Select a team</option>
+            <option value="engineering">Engineering</option>
+            <option value="design">Design</option>
+            <option value="product">Product</option>
+          </Select>
+          <Typography as="small" variant="small">
+            Selected value: {value || 'none'}
+          </Typography>
+          {invalid ? (
+            <Alert variant="error">
+              <AlertTitle>Choose a valid option</AlertTitle>
+              <AlertDescription>Select a team before continuing.</AlertDescription>
+            </Alert>
+          ) : null}
+        </Flex>
+      }
+      codeSample={codeSample}
+    />
+  );
+}
+
+function SwitchDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
+  const [size, setSize] = useState<(typeof switchSizes)[number]>('md');
+  const [checked, setChecked] = useState(true);
+  const [disabled, setDisabled] = useState(false);
+
+  const codeSample = useMemo(
+    () =>
+      `<Switch size="${size}"${disabled ? ' disabled' : ''} checked={${checked}} onCheckedChange={setEnabled} />`,
+    [checked, disabled, size]
+  );
+
+  return (
+    <ComponentDocTemplate
+      doc={doc}
+      controls={
+        <Flex direction="column" gap="md">
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="switch-size">Size</Label>
+            <Select
+              id="switch-size"
+              value={size}
+              onChange={(event) =>
+                setSize(event.currentTarget.value as (typeof switchSizes)[number])
+              }
+            >
+              {switchSizes.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="switch-checked">Checked</Label>
+            <Switch id="switch-checked" checked={checked} onCheckedChange={setChecked} />
+          </Flex>
+
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="switch-disabled">Disabled</Label>
+            <Switch id="switch-disabled" checked={disabled} onCheckedChange={setDisabled} />
+          </Flex>
+        </Flex>
+      }
+      preview={
+        <Flex direction="column" gap="sm">
+          <Flex direction="row" align="center" gap="sm">
+            <Switch
+              id="doc-switch"
+              size={size}
+              checked={checked}
+              disabled={disabled}
+              onCheckedChange={setChecked}
+            />
+            <Label htmlFor="doc-switch">Release notifications</Label>
+          </Flex>
+          <Typography as="small" variant="small">
+            Notifications are {checked ? 'enabled' : 'disabled'}.
+          </Typography>
+        </Flex>
+      }
+      codeSample={codeSample}
+    />
+  );
+}
+
+function TextareaDoc({ doc }: { doc: NonNullable<ReturnType<typeof getDocById>> }) {
+  const [size, setSize] = useState<(typeof fieldSizes)[number]>('md');
+  const [invalid, setInvalid] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [rows, setRows] = useState<(typeof textareaRows)[number]>(4);
+  const [value, setValue] = useState('Investigated profile route regressions and prepared a fix.');
+
+  const codeSample = useMemo(() => {
+    const invalidLine = invalid ? ' invalid' : '';
+    const disabledLine = disabled ? ' disabled' : '';
+
+    return `<Label htmlFor="notes">Release notes</Label>
+<Textarea id="notes" size="${size}" rows={${rows}}${invalidLine}${disabledLine} />`;
+  }, [disabled, invalid, rows, size]);
+
+  return (
+    <ComponentDocTemplate
+      doc={doc}
+      controls={
+        <Flex direction="column" gap="md">
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="textarea-size">Size</Label>
+            <Select
+              id="textarea-size"
+              value={size}
+              onChange={(event) =>
+                setSize(event.currentTarget.value as (typeof fieldSizes)[number])
+              }
+            >
+              {fieldSizes.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="textarea-rows">Rows</Label>
+            <Select
+              id="textarea-rows"
+              value={String(rows)}
+              onChange={(event) =>
+                setRows(Number(event.currentTarget.value) as (typeof textareaRows)[number])
+              }
+            >
+              {textareaRows.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="textarea-invalid">Invalid</Label>
+            <Switch id="textarea-invalid" checked={invalid} onCheckedChange={setInvalid} />
+          </Flex>
+
+          <Flex direction="column" gap="xs">
+            <Label htmlFor="textarea-disabled">Disabled</Label>
+            <Switch id="textarea-disabled" checked={disabled} onCheckedChange={setDisabled} />
+          </Flex>
+        </Flex>
+      }
+      preview={
+        <Flex direction="column" gap="sm">
+          <Label htmlFor="doc-textarea">Release notes</Label>
+          <Textarea
+            id="doc-textarea"
+            size={size}
+            rows={rows}
+            value={value}
+            invalid={invalid ? true : undefined}
+            disabled={disabled}
+            onChange={(event) => setValue(event.currentTarget.value)}
+          />
+          <Typography as="small" variant="small">
+            Character count: {value.length}
+          </Typography>
+          {invalid ? (
+            <Alert variant="error">
+              <AlertTitle>Notes are required</AlertTitle>
+              <AlertDescription>Add context so reviewers can validate the change.</AlertDescription>
+            </Alert>
+          ) : null}
+        </Flex>
       }
       codeSample={codeSample}
     />
