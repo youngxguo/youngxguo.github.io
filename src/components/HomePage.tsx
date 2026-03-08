@@ -40,7 +40,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               </Flex>
             </CardHeader>
             <CardFooter>
-              <Flex direction="row" gap="xs" wrap="wrap">
+              <Flex direction="row" gap="xs" wrap="nowrap">
                 <Button
                   size="sm"
                   variant="secondary"
