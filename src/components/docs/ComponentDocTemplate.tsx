@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardTitle,
   Flex,
-  Textarea,
   Typography
 } from 'yxgui';
+import { CodeBlock } from './CodeBlock';
 import { ComponentDoc } from './docsData';
 
 interface ComponentDocTemplateProps {
@@ -144,12 +144,7 @@ export function ComponentDocTemplate({
           <CardTitle>Example</CardTitle>
         </CardHeader>
         <CardContent>
-          <Textarea
-            aria-label={`${doc.name} example`}
-            readOnly
-            value={codeSample}
-            rows={Math.max(6, codeSample.split('\n').length + 1)}
-          />
+          <CodeBlock code={codeSample} />
         </CardContent>
       </Card>
     </Flex>
