@@ -19,6 +19,7 @@ import {
   docsComponents,
   getCatalogGroupAnchorId
 } from './docsData';
+import './DocsShell.css';
 
 interface DocsShellProps {
   activeComponentId?: ComponentDocId;
@@ -88,23 +89,9 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
   }, [activeGroupTitle, filteredCatalogGroups, normalizedSearchQuery]);
 
   return (
-    <section
-      aria-label="yxgui docs"
-      style={{ padding: '1rem', height: '100dvh', overflow: 'hidden' }}
-    >
-      <Flex direction="row" gap="lg" wrap="nowrap" style={{ height: '100%', minHeight: 0 }}>
-        <Flex
-          as="aside"
-          direction="column"
-          gap="md"
-          style={{
-            flex: '0 0 19rem',
-            minWidth: '16rem',
-            minHeight: 0,
-            paddingInlineEnd: '1rem',
-            borderRight: '1px solid color-mix(in srgb, currentColor 16%, transparent)'
-          }}
-        >
+    <section aria-label="yxgui docs" className="docs-shell">
+      <Flex direction="row" gap="lg" wrap="nowrap" className="docs-shell__layout">
+        <Flex as="aside" direction="column" gap="md" className="docs-shell__sidebar">
           <Flex direction="column" gap="xs">
             <Typography as="h2">Navigation</Typography>
             <Typography as="p" variant="small">
@@ -119,11 +106,7 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
             aria-label="Search components"
           />
           <Separator decorative />
-          <Flex
-            direction="column"
-            gap="sm"
-            style={{ minHeight: 0, overflowY: 'auto', paddingInlineEnd: '0.25rem' }}
-          >
+          <Flex direction="column" gap="sm" className="docs-shell__sidebar-scroll">
             <Button
               variant={!activeComponentId ? 'primary' : 'secondary'}
               size="sm"
@@ -139,7 +122,7 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
                     <Typography as="p" variant="small">
                       {group.title}
                     </Typography>
-                    <Flex direction="column" gap="xs" style={{ paddingInlineStart: '0.5rem' }}>
+                    <Flex direction="column" gap="xs" className="docs-shell__group-list">
                       {group.components.map((component) => (
                         <Button
                           key={component.id}
@@ -162,15 +145,9 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
           </Flex>
         </Flex>
 
-        <Flex
-          as="section"
-          direction="column"
-          gap="md"
-          grow={1}
-          style={{ minWidth: 0, minHeight: 0, flex: '3 1 42rem', paddingInlineStart: '0.25rem' }}
-        >
+        <Flex as="section" direction="column" gap="md" className="docs-shell__content">
           <Flex direction="row" align="start" justify="between" wrap="wrap" gap="sm">
-            <Flex direction="column" gap="xs" grow={1}>
+            <Flex direction="column" gap="xs" className="docs-shell__header-copy">
               <Typography as="h1">Component docs</Typography>
               <Typography as="p" variant="small">
                 Concise docs with live examples and copyable snippets.
@@ -225,12 +202,7 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
             </Flex>
           </Flex>
           <Separator decorative />
-          <Flex
-            direction="column"
-            gap="lg"
-            grow={1}
-            style={{ minHeight: 0, overflowY: 'auto', paddingInlineEnd: '0.25rem' }}
-          >
+          <Flex direction="column" gap="lg" className="docs-shell__body">
             {children}
           </Flex>
         </Flex>

@@ -1,9 +1,35 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Button, ThemeRoot } from 'yxgui';
 import { DocsPage } from './docs/DocsPage';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
+import './SiteApp.css';
 
 type Route = { kind: 'home' } | { kind: 'docs'; componentId?: string } | { kind: 'not-found' };
+type SiteTheme = 'light' | 'dark';
+
+const THEME_STORAGE_KEY = 'site-theme';
+
+function getStoredTheme(): SiteTheme | undefined {
+  try {
+    const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function getSystemTheme(): SiteTheme {
+  if (typeof window.matchMedia === 'function') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  return 'light';
+}
+
+function getInitialTheme(): SiteTheme {
+  return getStoredTheme() ?? getSystemTheme();
+}
 
 function normalizePath(pathname: string): string {
   const [pathWithoutHash] = pathname.split('#');
@@ -42,6 +68,15 @@ export function parseRoute(pathname: string): Route {
 
 export function SiteApp() {
   const [route, setRoute] = useState<Route>(() => parseRoute(window.location.pathname));
+  const [theme, setTheme] = useState<SiteTheme>(getInitialTheme);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Ignore storage write failures in private browsing modes.
+    }
+  }, [theme]);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -94,13 +129,27 @@ export function SiteApp() {
     window.scrollTo(0, 0);
   }, []);
 
+  const isDarkTheme = theme === 'dark';
+
   return (
-    <main>
-      {route.kind === 'home' ? <HomePage onNavigate={navigate} /> : null}
-      {route.kind === 'docs' ? (
-        <DocsPage componentId={route.componentId} onNavigate={navigate} />
-      ) : null}
-      {route.kind === 'not-found' ? <NotFoundPage onNavigate={navigate} /> : null}
-    </main>
+    <ThemeRoot theme={theme} className="site-app">
+      <div className="site-app__theme-toggle">
+        <Button
+          size="sm"
+          variant="secondary"
+          aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
+          onClick={() => setTheme(isDarkTheme ? 'light' : 'dark')}
+        >
+          {isDarkTheme ? 'Light mode' : 'Dark mode'}
+        </Button>
+      </div>
+      <main className="site-app__main">
+        {route.kind === 'home' ? <HomePage onNavigate={navigate} /> : null}
+        {route.kind === 'docs' ? (
+          <DocsPage componentId={route.componentId} onNavigate={navigate} />
+        ) : null}
+        {route.kind === 'not-found' ? <NotFoundPage onNavigate={navigate} /> : null}
+      </main>
+    </ThemeRoot>
   );
 }

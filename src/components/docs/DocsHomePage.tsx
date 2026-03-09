@@ -66,7 +66,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Flex,
-  Grid,
   FormField,
   FormFieldControl,
   FormFieldDescription,
@@ -140,6 +139,7 @@ import {
   docsComponents,
   getCatalogGroupAnchorId
 } from './docsData';
+import './DocsHomePage.css';
 
 interface DocsHomePageProps {
   onNavigate: (path: string) => void;
@@ -804,13 +804,13 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
       <Flex direction="column" gap="lg">
         {groupedComponents.map((group) => (
           <Flex key={group.title} id={group.anchorId} direction="column" gap="sm">
-            <Flex direction="column" gap="xs" style={{ scrollMarginTop: '1rem' }}>
+            <Flex direction="column" gap="xs" className="docs-home-page__group-header">
               <Typography as="h3">{group.title}</Typography>
               <Typography as="p" variant="small">
                 {group.summary}
               </Typography>
             </Flex>
-            <Grid columns="repeat(auto-fit, minmax(18rem, 1fr))" gap="md">
+            <div className="docs-home-page__catalog-grid">
               {group.components.map((component) => (
                 <Card key={component.id} variant="outlined">
                   <CardHeader>
@@ -831,7 +831,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
                   </CardContent>
                 </Card>
               ))}
-            </Grid>
+            </div>
           </Flex>
         ))}
       </Flex>

@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Flex, Separator, Typography } from 'yxgui';
 import { CodeBlock } from './CodeBlock';
 import { ComponentDoc } from './docsData';
+import './ComponentDocTemplate.css';
 
 export interface ComponentStoryExample {
   id: string;
@@ -21,7 +22,7 @@ export function ComponentDocTemplate({ doc, examples }: ComponentDocTemplateProp
   const useFramedPreview = doc.id !== 'breadcrumb';
 
   return (
-    <Flex direction="column" gap="lg" style={{ paddingBlockEnd: '1rem' }}>
+    <Flex direction="column" gap="lg" className="component-doc-template">
       <Flex direction="column" gap="xs">
         <Typography as="h2">{doc.name}</Typography>
         <Typography as="p" variant="small">
@@ -40,15 +41,7 @@ export function ComponentDocTemplate({ doc, examples }: ComponentDocTemplateProp
           </Flex>
           {useFramedPreview ? (
             <Flex direction="row">
-              <Flex
-                direction="column"
-                gap="sm"
-                style={{
-                  padding: '0.875rem',
-                  borderRadius: '12px',
-                  border: '1px solid color-mix(in srgb, currentColor 16%, transparent)'
-                }}
-              >
+              <Flex direction="column" gap="sm" className="component-doc-template__preview-frame">
                 {example.preview}
               </Flex>
             </Flex>
