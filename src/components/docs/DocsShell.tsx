@@ -90,119 +90,120 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
   return (
     <section aria-label="yxgui docs">
       <Flex direction="column" gap="lg" padding="sm">
-        <Flex as="aside" direction="column" gap="md">
-          <Flex direction="column" gap="xs">
-            <Typography as="h2">Navigation</Typography>
-            <Typography as="p" variant="small">
-              Jump between component docs by section.
-            </Typography>
-          </Flex>
-          <Input
-            size="sm"
-            placeholder="Search components"
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-            aria-label="Search components"
-          />
-          <Separator decorative />
-          <Flex direction="column" gap="sm">
-            <Button
-              variant={!activeComponentId ? 'primary' : 'secondary'}
-              size="sm"
-              onClick={() => onNavigate('/docs')}
-            >
-              Overview
-            </Button>
-
-            {visibleCatalogGroups.length > 0 ? (
-              <Flex direction="column" gap="md">
-                {visibleCatalogGroups.map((group) => (
-                  <Flex key={group.title} direction="column" gap="xs">
-                    <Typography as="p" variant="small">
-                      {group.title}
-                    </Typography>
-                    <Flex direction="column" gap="xs">
-                      {group.components.map((component) => (
-                        <Button
-                          key={component.id}
-                          variant={activeComponentId === component.id ? 'primary' : 'ghost'}
-                          size="sm"
-                          onClick={() => onNavigate(`/docs/components/${component.id}`)}
-                        >
-                          {component.name}
-                        </Button>
-                      ))}
-                    </Flex>
-                  </Flex>
-                ))}
-              </Flex>
-            ) : (
-              <Typography as="p" variant="small">
-                No components match: <code>{searchQuery.trim()}</code>.
-              </Typography>
-            )}
-          </Flex>
-        </Flex>
-        <Separator decorative />
-        <Flex as="section" direction="column" gap="md">
-          <Flex direction="row" align="start" justify="between" wrap="wrap" gap="sm">
+        <Flex direction="row" align="start" gap="lg" wrap="wrap">
+          <Flex as="aside" direction="column" gap="md">
             <Flex direction="column" gap="xs">
-              <Typography as="h1">Component docs</Typography>
+              <Typography as="h2">Navigation</Typography>
               <Typography as="p" variant="small">
-                Concise docs with live examples and copyable snippets.
+                Jump between component docs by section.
               </Typography>
-              {activeComponentName ? (
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem>
-                      <BreadcrumbLink
-                        href="/docs"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          onNavigate('/docs');
-                        }}
-                      >
-                        Overview
-                      </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    {activeGroupTitle && activeGroupAnchorId ? (
-                      <>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                          <BreadcrumbLink
-                            href={`/docs#${activeGroupAnchorId}`}
-                            onClick={(event) => {
-                              event.preventDefault();
-                              onNavigate(`/docs#${activeGroupAnchorId}`);
-                            }}
-                          >
-                            {activeGroupTitle}
-                          </BreadcrumbLink>
-                        </BreadcrumbItem>
-                      </>
-                    ) : null}
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>{activeComponentName}</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
-              ) : null}
             </Flex>
-            <Flex direction="row" wrap="wrap" gap="xs">
-              <Button variant="secondary" onClick={() => openExternal(YXGUI_GITHUB_URL)}>
-                <GitHubIcon />
-                GitHub
+            <Input
+              size="sm"
+              placeholder="Search components"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              aria-label="Search components"
+            />
+            <Separator decorative />
+            <Flex direction="column" gap="sm">
+              <Button
+                variant={!activeComponentId ? 'primary' : 'secondary'}
+                size="sm"
+                onClick={() => onNavigate('/docs')}
+              >
+                Overview
               </Button>
-              <Button variant="secondary" onClick={() => onNavigate('/')}>
-                <HomeIcon />
-                Home
-              </Button>
+
+              {visibleCatalogGroups.length > 0 ? (
+                <Flex direction="column" gap="md">
+                  {visibleCatalogGroups.map((group) => (
+                    <Flex key={group.title} direction="column" gap="xs">
+                      <Typography as="p" variant="small">
+                        {group.title}
+                      </Typography>
+                      <Flex direction="column" gap="xs">
+                        {group.components.map((component) => (
+                          <Button
+                            key={component.id}
+                            variant={activeComponentId === component.id ? 'primary' : 'ghost'}
+                            size="sm"
+                            onClick={() => onNavigate(`/docs/components/${component.id}`)}
+                          >
+                            {component.name}
+                          </Button>
+                        ))}
+                      </Flex>
+                    </Flex>
+                  ))}
+                </Flex>
+              ) : (
+                <Typography as="p" variant="small">
+                  No components match: <code>{searchQuery.trim()}</code>.
+                </Typography>
+              )}
             </Flex>
           </Flex>
-          <Separator decorative />
-          <Flex direction="column" gap="lg">
-            {children}
+          <Flex as="section" direction="column" gap="md">
+            <Flex direction="row" align="start" justify="between" wrap="wrap" gap="sm">
+              <Flex direction="column" gap="xs">
+                <Typography as="h1">Component docs</Typography>
+                <Typography as="p" variant="small">
+                  Concise docs with live examples and copyable snippets.
+                </Typography>
+                {activeComponentName ? (
+                  <Breadcrumb>
+                    <BreadcrumbList>
+                      <BreadcrumbItem>
+                        <BreadcrumbLink
+                          href="/docs"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            onNavigate('/docs');
+                          }}
+                        >
+                          Overview
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                      {activeGroupTitle && activeGroupAnchorId ? (
+                        <>
+                          <BreadcrumbSeparator />
+                          <BreadcrumbItem>
+                            <BreadcrumbLink
+                              href={`/docs#${activeGroupAnchorId}`}
+                              onClick={(event) => {
+                                event.preventDefault();
+                                onNavigate(`/docs#${activeGroupAnchorId}`);
+                              }}
+                            >
+                              {activeGroupTitle}
+                            </BreadcrumbLink>
+                          </BreadcrumbItem>
+                        </>
+                      ) : null}
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbPage>{activeComponentName}</BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </BreadcrumbList>
+                  </Breadcrumb>
+                ) : null}
+              </Flex>
+              <Flex direction="row" wrap="wrap" gap="xs">
+                <Button variant="secondary" onClick={() => openExternal(YXGUI_GITHUB_URL)}>
+                  <GitHubIcon />
+                  GitHub
+                </Button>
+                <Button variant="secondary" onClick={() => onNavigate('/')}>
+                  <HomeIcon />
+                  Home
+                </Button>
+              </Flex>
+            </Flex>
+            <Separator decorative />
+            <Flex direction="column" gap="lg">
+              {children}
+            </Flex>
           </Flex>
         </Flex>
       </Flex>
