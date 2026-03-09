@@ -810,7 +810,7 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
                 {group.summary}
               </Typography>
             </Flex>
-            <Grid columns={2} gap="md">
+            <Grid columns={3} gap="md">
               {group.components.map((component) => (
                 <Card key={component.id} variant="outlined">
                   <CardHeader>
