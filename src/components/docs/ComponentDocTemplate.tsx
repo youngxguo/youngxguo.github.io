@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Flex, Separator, Typography } from 'yxgui';
+import { Card, CardContent, Flex, Separator, Typography } from 'yxgui';
 import { CodeBlock } from './CodeBlock';
 import { ComponentDoc } from './docsData';
 
@@ -21,7 +21,7 @@ export function ComponentDocTemplate({ doc, examples }: ComponentDocTemplateProp
   const useFramedPreview = doc.id !== 'breadcrumb';
 
   return (
-    <Flex direction="column" gap="lg" style={{ paddingBlockEnd: '1rem' }}>
+    <Flex direction="column" gap="lg">
       <Flex direction="column" gap="xs">
         <Typography as="h2">{doc.name}</Typography>
         <Typography as="p" variant="small">
@@ -39,19 +39,13 @@ export function ComponentDocTemplate({ doc, examples }: ComponentDocTemplateProp
             </Typography>
           </Flex>
           {useFramedPreview ? (
-            <Flex direction="row">
-              <Flex
-                direction="column"
-                gap="sm"
-                style={{
-                  padding: '0.875rem',
-                  borderRadius: '12px',
-                  border: '1px solid color-mix(in srgb, currentColor 16%, transparent)'
-                }}
-              >
-                {example.preview}
-              </Flex>
-            </Flex>
+            <Card variant="outlined">
+              <CardContent>
+                <Flex direction="column" gap="sm">
+                  {example.preview}
+                </Flex>
+              </CardContent>
+            </Card>
           ) : (
             <Flex direction="row">{example.preview}</Flex>
           )}

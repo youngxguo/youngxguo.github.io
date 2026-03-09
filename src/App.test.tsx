@@ -5,6 +5,7 @@ import { siteConfig } from './siteConfig';
 describe('App', () => {
   afterEach(() => {
     window.history.pushState({}, '', '/');
+    window.localStorage.clear();
   });
 
   it('renders profile heading and action buttons on home route', () => {
@@ -63,5 +64,18 @@ describe('App', () => {
     fireEvent.change(searchInput, { target: { value: 'zzz' } });
     expect(screen.getByText(/No components match:/)).toBeInTheDocument();
     expect(screen.getByText('zzz')).toBeInTheDocument();
+  });
+
+  it('toggles between light and dark mode', () => {
+    window.history.pushState({}, '', '/');
+    render(<App />);
+
+    const toggleButton = screen.getByRole('button', { name: 'Switch to dark mode' });
+    expect(toggleButton.querySelector('svg')).not.toBeNull();
+
+    fireEvent.click(toggleButton);
+
+    expect(screen.getByRole('button', { name: 'Switch to light mode' })).toBeInTheDocument();
+    expect(window.localStorage.getItem('site-theme')).toBe('dark');
   });
 });

@@ -804,13 +804,13 @@ export function DocsHomePage({ onNavigate }: DocsHomePageProps) {
       <Flex direction="column" gap="lg">
         {groupedComponents.map((group) => (
           <Flex key={group.title} id={group.anchorId} direction="column" gap="sm">
-            <Flex direction="column" gap="xs" style={{ scrollMarginTop: '1rem' }}>
+            <Flex direction="column" gap="xs">
               <Typography as="h3">{group.title}</Typography>
               <Typography as="p" variant="small">
                 {group.summary}
               </Typography>
             </Flex>
-            <Grid columns="repeat(auto-fit, minmax(18rem, 1fr))" gap="md">
+            <Grid columns={3} gap="md">
               {group.components.map((component) => (
                 <Card key={component.id} variant="outlined">
                   <CardHeader>

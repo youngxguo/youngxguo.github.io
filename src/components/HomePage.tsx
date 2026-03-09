@@ -27,12 +27,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
   return (
     <section aria-label="home page">
       <Flex direction="column" gap="md" align="center">
-        <Flex shrink={0} grow={0}>
+        <Flex>
           <Card variant="elevated">
             <CardHeader>
               <Flex direction="row" align="center" gap="sm" wrap="wrap">
                 <Avatar src={siteConfig.picture} alt={siteConfig.name} size="md" shape="circle" />
-                <Flex direction="column" gap="xs" grow={1}>
+                <Flex direction="column" gap="xs">
                   <CardTitle>{siteConfig.name}</CardTitle>
                   <CardDescription>{siteConfig.bio}</CardDescription>
                 </Flex>
