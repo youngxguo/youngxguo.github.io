@@ -71,11 +71,11 @@ describe('App', () => {
     render(<App />);
 
     const toggleButton = screen.getByRole('button', { name: 'Switch to dark mode' });
-    expect(toggleButton).toHaveTextContent('Dark mode');
+    expect(toggleButton.querySelector('svg')).not.toBeNull();
 
     fireEvent.click(toggleButton);
 
-    expect(toggleButton).toHaveTextContent('Light mode');
+    expect(screen.getByRole('button', { name: 'Switch to light mode' })).toBeInTheDocument();
     expect(window.localStorage.getItem('site-theme')).toBe('dark');
   });
 });

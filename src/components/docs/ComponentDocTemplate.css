@@ -1,9 +1,0 @@
-.component-doc-template {
-  padding-block-end: 1rem;
-}
-
-.component-doc-template__preview-frame {
-  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
-  border-radius: 12px;
-  padding: 0.875rem;
-}

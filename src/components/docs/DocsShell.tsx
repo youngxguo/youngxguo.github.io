@@ -19,7 +19,6 @@ import {
   docsComponents,
   getCatalogGroupAnchorId
 } from './docsData';
-import './DocsShell.css';
 
 interface DocsShellProps {
   activeComponentId?: ComponentDocId;
@@ -89,9 +88,9 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
   }, [activeGroupTitle, filteredCatalogGroups, normalizedSearchQuery]);
 
   return (
-    <section aria-label="yxgui docs" className="docs-shell">
-      <Flex direction="row" gap="lg" wrap="nowrap" className="docs-shell__layout">
-        <Flex as="aside" direction="column" gap="md" className="docs-shell__sidebar">
+    <section aria-label="yxgui docs">
+      <Flex direction="column" gap="lg" padding="sm">
+        <Flex as="aside" direction="column" gap="md">
           <Flex direction="column" gap="xs">
             <Typography as="h2">Navigation</Typography>
             <Typography as="p" variant="small">
@@ -106,7 +105,7 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
             aria-label="Search components"
           />
           <Separator decorative />
-          <Flex direction="column" gap="sm" className="docs-shell__sidebar-scroll">
+          <Flex direction="column" gap="sm">
             <Button
               variant={!activeComponentId ? 'primary' : 'secondary'}
               size="sm"
@@ -122,7 +121,7 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
                     <Typography as="p" variant="small">
                       {group.title}
                     </Typography>
-                    <Flex direction="column" gap="xs" className="docs-shell__group-list">
+                    <Flex direction="column" gap="xs">
                       {group.components.map((component) => (
                         <Button
                           key={component.id}
@@ -144,10 +143,10 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
             )}
           </Flex>
         </Flex>
-
-        <Flex as="section" direction="column" gap="md" className="docs-shell__content">
+        <Separator decorative />
+        <Flex as="section" direction="column" gap="md">
           <Flex direction="row" align="start" justify="between" wrap="wrap" gap="sm">
-            <Flex direction="column" gap="xs" className="docs-shell__header-copy">
+            <Flex direction="column" gap="xs">
               <Typography as="h1">Component docs</Typography>
               <Typography as="p" variant="small">
                 Concise docs with live examples and copyable snippets.
@@ -202,7 +201,7 @@ export function DocsShell({ activeComponentId, onNavigate, children }: DocsShell
             </Flex>
           </Flex>
           <Separator decorative />
-          <Flex direction="column" gap="lg" className="docs-shell__body">
+          <Flex direction="column" gap="lg">
             {children}
           </Flex>
         </Flex>

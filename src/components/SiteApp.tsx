@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button, ThemeRoot } from 'yxgui';
+import { Moon, Sun } from 'lucide-react';
+import { Button, Flex, ThemeRoot } from 'yxgui';
 import { DocsPage } from './docs/DocsPage';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
-import './SiteApp.css';
 
 type Route = { kind: 'home' } | { kind: 'docs'; componentId?: string } | { kind: 'not-found' };
 type SiteTheme = 'light' | 'dark';
@@ -132,18 +132,18 @@ export function SiteApp() {
   const isDarkTheme = theme === 'dark';
 
   return (
-    <ThemeRoot theme={theme} className="site-app">
-      <div className="site-app__theme-toggle">
+    <ThemeRoot theme={theme} style={{ minHeight: '100dvh' }}>
+      <Flex direction="row" justify="end" padding="sm">
         <Button
           size="sm"
-          variant="secondary"
+          variant="ghost"
           aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
           onClick={() => setTheme(isDarkTheme ? 'light' : 'dark')}
         >
-          {isDarkTheme ? 'Light mode' : 'Dark mode'}
+          {isDarkTheme ? <Sun size={16} /> : <Moon size={16} />}
         </Button>
-      </div>
-      <main className="site-app__main">
+      </Flex>
+      <main>
         {route.kind === 'home' ? <HomePage onNavigate={navigate} /> : null}
         {route.kind === 'docs' ? (
           <DocsPage componentId={route.componentId} onNavigate={navigate} />
