@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Button, Flex, ThemeRoot } from 'yxgui';
-import { DocsPage } from './docs/DocsPage';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
 
-type Route = { kind: 'home' } | { kind: 'docs'; componentId?: string } | { kind: 'not-found' };
+type Route = { kind: 'home' } | { kind: 'not-found' };
 type SiteTheme = 'light' | 'dark';
 
 const THEME_STORAGE_KEY = 'site-theme';
@@ -47,20 +46,6 @@ export function parseRoute(pathname: string): Route {
 
   if (path === '/') {
     return { kind: 'home' };
-  }
-
-  if (path === '/docs' || path === '/docs/components') {
-    return { kind: 'docs' };
-  }
-
-  if (path.startsWith('/docs/components/')) {
-    const componentId = decodeURIComponent(path.replace('/docs/components/', ''));
-
-    if (componentId.length === 0) {
-      return { kind: 'docs' };
-    }
-
-    return { kind: 'docs', componentId };
   }
 
   return { kind: 'not-found' };
@@ -144,10 +129,7 @@ export function SiteApp() {
         </Button>
       </Flex>
       <main>
-        {route.kind === 'home' ? <HomePage onNavigate={navigate} /> : null}
-        {route.kind === 'docs' ? (
-          <DocsPage componentId={route.componentId} onNavigate={navigate} />
-        ) : null}
+        {route.kind === 'home' ? <HomePage /> : null}
         {route.kind === 'not-found' ? <NotFoundPage onNavigate={navigate} /> : null}
       </main>
     </ThemeRoot>

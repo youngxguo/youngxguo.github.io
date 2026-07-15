@@ -8,12 +8,8 @@ import {
   CardTitle,
   Flex
 } from 'yxgui';
-import { DocsIcon, EmailIcon, GitHubIcon, LinkedInIcon } from './icons';
+import { EmailIcon, GitHubIcon, LinkedInIcon } from './icons';
 import { siteConfig } from '../siteConfig';
-
-interface HomePageProps {
-  onNavigate: (path: string) => void;
-}
 
 function openExternal(url: string) {
   window.open(url, '_blank', 'noopener,noreferrer');
@@ -23,7 +19,7 @@ function openMailto(url: string) {
   window.location.href = url;
 }
 
-export function HomePage({ onNavigate }: HomePageProps) {
+export function HomePage() {
   return (
     <section aria-label="home page">
       <Flex direction="column" gap="md" align="center">
@@ -63,10 +59,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 >
                   <EmailIcon />
                   Email
-                </Button>
-                <Button size="sm" variant="secondary" onClick={() => onNavigate('/docs')}>
-                  <DocsIcon />
-                  Docs
                 </Button>
               </Flex>
             </CardFooter>
