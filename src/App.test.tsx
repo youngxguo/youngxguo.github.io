@@ -26,44 +26,15 @@ describe('App', () => {
     expect(emailButton).toBeInTheDocument();
     expect(emailButton.querySelector('svg')).not.toBeNull();
 
-    const docsButton = screen.getByRole('button', { name: 'Docs' });
-    expect(docsButton).toBeInTheDocument();
-    expect(docsButton.querySelector('svg')).not.toBeNull();
+    expect(screen.queryByRole('button', { name: 'Docs' })).not.toBeInTheDocument();
   });
 
-  it('renders component docs route', () => {
-    window.history.pushState({}, '', '/docs/components/button');
-    render(<App />);
-
-    expect(screen.getByText('Component docs')).toBeInTheDocument();
-    expect(screen.getByText('Primary action')).toBeInTheDocument();
-    const githubButton = screen.getByRole('button', { name: 'GitHub' });
-    expect(githubButton).toBeInTheDocument();
-    expect(githubButton.querySelector('svg')).not.toBeNull();
-    expect(screen.getByRole('heading', { name: 'Button' })).toBeInTheDocument();
-  });
-
-  it('renders newly added component docs pages', () => {
-    window.history.pushState({}, '', '/docs/components/accordion');
-    render(<App />);
-
-    expect(screen.getByRole('heading', { name: 'Accordion' })).toBeInTheDocument();
-    expect(screen.getByText('Basic usage')).toBeInTheDocument();
-  });
-
-  it('filters docs navigation components with search input', () => {
+  it('does not expose the removed docs routes', () => {
     window.history.pushState({}, '', '/docs');
     render(<App />);
 
-    const searchInput = screen.getByRole('textbox', { name: 'Search components' });
-    fireEvent.change(searchInput, { target: { value: 'but' } });
-
-    expect(screen.getByRole('button', { name: 'Button' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Input' })).not.toBeInTheDocument();
-
-    fireEvent.change(searchInput, { target: { value: 'zzz' } });
-    expect(screen.getByText(/No components match:/)).toBeInTheDocument();
-    expect(screen.getByText('zzz')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Page not found' })).toBeInTheDocument();
+    expect(screen.queryByText(/docs/i)).not.toBeInTheDocument();
   });
 
   it('toggles between light and dark mode', () => {
