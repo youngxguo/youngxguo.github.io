@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
-import { Button, Flex, ThemeRoot } from 'yxgui';
+import { Button, Flex, Theme } from 'yxgui';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -117,21 +117,28 @@ export function SiteApp() {
   const isDarkTheme = theme === 'dark';
 
   return (
-    <ThemeRoot theme={theme} style={{ minHeight: '100dvh' }}>
-      <Flex direction="row" justify="end" padding="sm">
-        <Button
-          size="sm"
-          variant="ghost"
-          aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
-          onClick={() => setTheme(isDarkTheme ? 'light' : 'dark')}
-        >
-          {isDarkTheme ? <Sun size={16} /> : <Moon size={16} />}
-        </Button>
+    <Theme mode={theme}>
+      <Flex direction="column" minHeight="viewport">
+        <header>
+          <Flex justify="end" padding="sm">
+            <Button
+              type="button"
+              aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
+              onClick={() => setTheme(isDarkTheme ? 'light' : 'dark')}
+            >
+              {isDarkTheme ? (
+                <Sun aria-hidden="true" size={16} />
+              ) : (
+                <Moon aria-hidden="true" size={16} />
+              )}
+            </Button>
+          </Flex>
+        </header>
+        <main>
+          {route.kind === 'home' ? <HomePage /> : null}
+          {route.kind === 'not-found' ? <NotFoundPage onNavigate={navigate} /> : null}
+        </main>
       </Flex>
-      <main>
-        {route.kind === 'home' ? <HomePage /> : null}
-        {route.kind === 'not-found' ? <NotFoundPage onNavigate={navigate} /> : null}
-      </main>
-    </ThemeRoot>
+    </Theme>
   );
 }

@@ -1,15 +1,6 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Flex
-} from 'yxgui';
-import { EmailIcon, GitHubIcon, LinkedInIcon } from './icons';
+import { Button, Card, Flex, Typography } from 'yxgui';
 import { siteConfig } from '../siteConfig';
+import { EmailIcon, GitHubIcon, LinkedInIcon } from './icons';
 
 function openExternal(url: string) {
   window.open(url, '_blank', 'noopener,noreferrer');
@@ -22,48 +13,42 @@ function openMailto(url: string) {
 export function HomePage() {
   return (
     <section aria-label="home page">
-      <Flex direction="column" gap="md" align="center">
-        <Flex>
-          <Card variant="elevated">
-            <CardHeader>
-              <Flex direction="row" align="center" gap="sm" wrap="wrap">
-                <Avatar src={siteConfig.picture} alt={siteConfig.name} size="md" shape="circle" />
-                <Flex direction="column" gap="xs">
-                  <CardTitle>{siteConfig.name}</CardTitle>
-                  <CardDescription>{siteConfig.bio}</CardDescription>
+      <Flex direction="column" align="center" padding="lg">
+        <Card>
+          <Flex direction="column" gap="lg">
+            <header>
+              <Flex align="center" gap="sm" wrap>
+                <img
+                  src={siteConfig.picture}
+                  alt={siteConfig.name}
+                  width={64}
+                  height={64}
+                  style={{ borderRadius: '50%', objectFit: 'cover' }}
+                />
+                <Flex direction="column" gap="sm">
+                  <Typography variant="h1">{siteConfig.name}</Typography>
+                  <Typography color="muted">{siteConfig.bio}</Typography>
                 </Flex>
               </Flex>
-            </CardHeader>
-            <CardFooter>
-              <Flex direction="row" gap="xs" wrap="nowrap">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => openExternal(siteConfig.links.github)}
-                >
+            </header>
+            <footer>
+              <Flex gap="sm" wrap>
+                <Button type="button" onClick={() => openExternal(siteConfig.links.github)}>
                   <GitHubIcon />
                   GitHub
                 </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => openExternal(siteConfig.links.linkedin)}
-                >
+                <Button type="button" onClick={() => openExternal(siteConfig.links.linkedin)}>
                   <LinkedInIcon />
                   LinkedIn
                 </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => openMailto(siteConfig.links.email)}
-                >
+                <Button type="button" onClick={() => openMailto(siteConfig.links.email)}>
                   <EmailIcon />
                   Email
                 </Button>
               </Flex>
-            </CardFooter>
-          </Card>
-        </Flex>
+            </footer>
+          </Flex>
+        </Card>
       </Flex>
     </section>
   );
