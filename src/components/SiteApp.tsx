@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Moon, Sun } from 'lucide-react';
-import { Button, Flex, Theme } from 'yxgui';
+import { Button, Flex, Icon, Theme } from 'yxgui';
 import { HomePage } from './HomePage';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -126,11 +125,7 @@ export function SiteApp() {
               aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
               onClick={() => setTheme(isDarkTheme ? 'light' : 'dark')}
             >
-              {isDarkTheme ? (
-                <Sun aria-hidden="true" size={16} />
-              ) : (
-                <Moon aria-hidden="true" size={16} />
-              )}
+              <Icon name={isDarkTheme ? 'sun' : 'moon'} />
             </Button>
           </Flex>
         </header>

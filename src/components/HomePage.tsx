@@ -1,6 +1,5 @@
-import { Button, Card, Flex, Typography } from 'yxgui';
+import { Button, Card, Flex, Icon, Typography } from 'yxgui';
 import { siteConfig } from '../siteConfig';
-import { EmailIcon, GitHubIcon, LinkedInIcon } from './icons';
 
 function openExternal(url: string) {
   window.open(url, '_blank', 'noopener,noreferrer');
@@ -34,15 +33,15 @@ export function HomePage() {
             <footer>
               <Flex gap="sm" wrap>
                 <Button type="button" onClick={() => openExternal(siteConfig.links.github)}>
-                  <GitHubIcon />
+                  <Icon name="github" />
                   GitHub
                 </Button>
                 <Button type="button" onClick={() => openExternal(siteConfig.links.linkedin)}>
-                  <LinkedInIcon />
+                  <Icon name="linkedin" />
                   LinkedIn
                 </Button>
                 <Button type="button" onClick={() => openMailto(siteConfig.links.email)}>
-                  <EmailIcon />
+                  <Icon name="mail" />
                   Email
                 </Button>
               </Flex>
