@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: 'Young Guo',
-  bio: 'Engineering @ Hyperscale',
+  bio: 'Member of Technical Staff @ Hyperscale',
   picture: '/assets/images/youngguo.jpg',
   links: {
     github: 'https://github.com/youngxguo',
