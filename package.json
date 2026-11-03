@@ -17,10 +17,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "lucide-react": "^0.577.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "yxgui": "^0.1.0"
+    "yxgui": "file:vendor/yxgui-887f3df.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.3",
